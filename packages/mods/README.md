@@ -72,13 +72,15 @@ export const StyledComponent = styled.div<{ customProp: boolean }>`
 ```
 
 # Contents
-[Installing](#setup)  
-[Setting up modifiers](#initMods)  
-[Setting types for modifiers](#initTypes)  
-[Using types](#usageTypes)  
-[Using modifiers](#usage)  
+[Install](#install)  
+[Setup modifiers](#setupMods)  
+[Setup types for modifiers](#setupTypes)  
+[Usage types](#usageTypes)  
+[Usage modifiers](#usageMods)
+[Highlight syntax](#highlight)
 
-<a name="setup"><h2>Installing</h2></a>
+
+<a name="install"><h2>Install</h2></a>
 You can install the library using the `npm` or `Yarn` package manager.
 
 Installation example using `npm`:
@@ -91,7 +93,7 @@ An example installation using `Yarn':
 yarn add @styled-kit/mods
 ```
 
-<a name="initMods"><h2>Setting up modifiers</h2></a>
+<a name="setupMods"><h2>Setup modifiers</h2></a>
 To be able to use modifiers via Dot Notation,
 you must define in advance what they can be and what their values are. 
 
@@ -135,7 +137,7 @@ const config = <const>{
 export const mods = initMods(config);
 ```
 
-<a name="initTypes"><h2>Setting types for modifiers</h2></a>
+<a name="setupTypes"><h2>Setup types for modifiers</h2></a>
 To use autocomplete and types for modifiers, you must configure the appropriate TypeScript types.
 
 You can make type settings in any file of your project, but as an option,
@@ -167,7 +169,7 @@ It is only needed to create a `Mod` type.
 `Mod` is a type representing modifiers, where `M` is the name of the modifier,
 and `V` is the value of the modifier _(optional)_.
 
-<a name="usageTypes"><h2>Using types</h2></a>
+<a name="usageTypes"><h2>Usage types</h2></a>
 ### Type `Mod`.
 This type allows you to define which properties a particular Styled Component can take.
 
@@ -250,7 +252,7 @@ export const StyledComponent = styled.div<SCProps<Mods<'size'> & { padding: stri
 <StyledComponent $size='small' $padding='12px' />
 ```
 
-<a name="usage"><h2>Using modifiers</h2></a>
+<a name="usageMods"><h2>Usage modifiers</h2></a>
 After initializing the modifiers and configuring the types, you can use them in stylized components.
 
 The use of modifiers is done through Dot Notation:
@@ -367,3 +369,15 @@ export const StyledComponent = styled.div<{ big: boolean; }>`
     `}
 `;
 ```
+
+<a name="highlight"><h2>Highlight syntax</h2></a>
+In order to make syntax highlighting in the IDE, you need to install the styled-components plugin.
+
+In most of the plugins for styled-components it is possible to add a keyword in relation to which the syntax highlighting will be performed.
+
+For example, [plugin for IDE WebStorm](https://plugins.jetbrains.com/plugin/9997-styled-components--styled-jsx).
+
+After installing the plugin, go to `WebStorm/Preferences/Languages & Frameworks/JavaScript/Styled Components`,
+click on `+` and add the keyword `mods`.
+
+After that, the CSS syntax will be highlighted in the styles defined in `mods`.
