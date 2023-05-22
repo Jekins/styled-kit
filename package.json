@@ -2,7 +2,7 @@
     "name": "@styled-kit/source",
     "version": "0.1.2",
     "license": "MIT",
-    "scripts": {},
+    "author": "Jekins",
     "private": true,
     "peerDependencies": {
         "styled-components": "^5.3.10",

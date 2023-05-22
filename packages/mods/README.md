@@ -4,9 +4,34 @@ This library allows you to write modifiers for [Styled Components](https://style
 and with autocomplete. As well as automatically generate for them [typing](https://www.typescriptlang.org/).
 
 ## Quick look
+### Setting up
+_src/styled-kit.ts_
+```ts
+import { initMods, ModsConfigType, ModsType } from '@styled-kit/mods';
+
+const config = <const>{
+  size: ['small', 'medium', 'large'],
+  spacing: [8, 12],
+  disabled: [true, false],
+};
+
+export const mods = initMods(config);
+
+type ModsConfig = ModsConfigType<typeof config>;
+
+export type Mods<
+  M extends keyof ModsConfig,
+  V extends ModsConfig[M] = undefined
+> = ModsType<ModsConfig, M, V>;
+```
+### Using
+[Live demo](https://codesandbox.io/s/withered-firefly-zfltek)
+
 Apply the styles if the `size` property is `small`:
 ```ts
-export const StyledComponent = styled.div<Mod<'size'>>`
+import { mods, Mods } from './styled-kit'
+
+export const StyledComponent = styled.div<Mods<'size'>>`
     ${mods.size.small`
         font-size: 14px;
     `};
@@ -15,7 +40,9 @@ export const StyledComponent = styled.div<Mod<'size'>>`
 
 Apply the styles if the `disabled` property is `true`:
 ```ts
-export const StyledComponent = styled.div<Mod<'disabled'>>`
+import { mods, Mods } from './styled-kit'
+
+export const StyledComponent = styled.div<Mods<'disabled'>>`
     ${mods.disabled.true`
         color: gray;
     `};
@@ -24,6 +51,8 @@ export const StyledComponent = styled.div<Mod<'disabled'>>`
 
 Apply styles if the custom property `customProp` is equal to `customValue`:
 ```ts
+import { mods, Mods } from './styled-kit'
+
 export const StyledComponent = styled.div<{ customProp: string }>`
     ${mods.is('customProp', 'customValue')`
         background: black;
@@ -33,6 +62,8 @@ export const StyledComponent = styled.div<{ customProp: string }>`
 
 Apply the styles if the custom property `customProp` is `true`:
 ```ts
+import { mods, Mods } from './styled-kit'
+
 export const StyledComponent = styled.div<{ customProp: boolean }>`
     ${mods.is('customProp')`
         background: black;
@@ -68,12 +99,12 @@ you must define in advance what they can be and what their values are.
 To configure modifiers, create a `config` configuration object.
 
 You can create this object in any file in your project, but as an option,
-you can create a file `styled.config.ts` (or `styled.config.js` if you're not using TypeScript)
-Next to the `App` component.
+you can create a file `styled-kit.ts` (or `styled-kit.js` if you're not using TypeScript)
+Next to the `App.tsx` component.
 
-_./src/styled.config.ts_
+_src/styled-kit.ts_
 ```ts
-export const config = <const>{
+const config = <const>{
     size: ['small', 'medium', 'large'],
     spacing: [8, 12],
     disabled: [true, false],
@@ -87,44 +118,47 @@ Over time, you can add to this object as new modifiers are needed.
 to fix its values and ensure that typing works correctly.
 
 ### Initializing the configuration
-In the `App` component, import your configuration and initialize the modifiers,
-using the `initMods` function.
-
 You can initialize the modifiers in any file of your project, but
 it is important that the initialization is done only once at application startup.
 The `mods` object can then be reused in components of your application.
 
-_./src/App.ts_
+_src/styled-kit.ts_
 ```ts
 import { initMods } from '@styled-kit/mods';
-import { config } from './styled.config';
+
+const config = <const>{
+  size: ['small', 'medium', 'large'],
+  spacing: [8, 12],
+  disabled: [true, false],
+};
 
 export const mods = initMods(config);
-
-const App = () => {
-  // App component
-}
 ```
 
 <a name="initTypes"><h2>Setting types for modifiers</h2></a>
 To use autocomplete and types for modifiers, you must configure the appropriate TypeScript types.
 
 You can make type settings in any file of your project, but as an option,
-you can do this in `styled.config.ts` just below your configuration:
+you can do this in `styled-kit.ts` just below your configuration:
 
-_./src/styled.config.ts_
+_src/styled-kit.ts_
 ```ts
-import { ModConfigType, ModType } from '@styled-kit/mods';
+import { initMods, ModsConfigType, ModsType } from '@styled-kit/mods';
 
-export const config = <const>{
-    size: ['small', 'medium', 'large'],
-    spacing: [8, 12],
-    disabled: [true, false],
+const config = <const>{
+  size: ['small', 'medium', 'large'],
+  spacing: [8, 12],
+  disabled: [true, false],
 };
 
-type ModConfig = ModConfigType<typeof config>;
+export const mods = initMods(config);
 
-export type Mod<M extends keyof ModConfig, V extends ModConfig[M] = undefined> = ModType<ModConfig, M, V>;
+type ModsConfig = ModsConfigType<typeof config>;
+
+export type Mods<
+  M extends keyof ModsConfig,
+  V extends ModsConfig[M] = undefined
+> = ModsType<ModsConfig, M, V>;
 ```
 
 `ModConfig` is a type representing the configuration structure of modifiers.
@@ -137,18 +171,18 @@ and `V` is the value of the modifier _(optional)_.
 ### Type `Mod`.
 This type allows you to define which properties a particular Styled Component can take.
 
-`Mod<'size'>` - returns the type of object with the `size` modifier, with all its values from `config`:
+`Mods<'size'>` - returns the type of object with the `size` modifier, with all its values from `config`:
 ```ts
-type ComponentProps = Mod<'size'>
+type ComponentProps = Mods<'size'>
 
 // ComponentProps = {
 //  size?: 'small' | 'medium' | 'large';
 // }
 ```
 
-`Mod<'size' | 'disabled'>` - returns object type with `size` and `disabled` modifiers, with all their values from `config`:
+`Mods<'size' | 'disabled'>` - returns object type with `size` and `disabled` modifiers, with all their values from `config`:
 ```ts
-type ComponentProps = Mod<'size' | 'disabled'>
+type ComponentProps = Mods<'size' | 'disabled'>
 
 // ComponentProps = {
 //  size?: 'small' | 'medium' | 'large';
@@ -156,18 +190,18 @@ type ComponentProps = Mod<'size' | 'disabled'>
 // }
 ```
 
-`Mod<'size', 'small' | 'large'>` – Returns the object type with the `size` modifier, with `small` and `large` values:
+`Mods<'size', 'small' | 'large'>` – Returns the object type with the `size` modifier, with `small` and `large` values:
 ```ts
-type ComponentProps = Mod<'size', 'small' | 'large'>
+type ComponentProps = Mods<'size', 'small' | 'large'>
 
 // ComponentProps = {
 //  size?: 'small' | 'large';
 // }
 ```
 
-`Mod<'size', 'small'> & Mod<'disabled', true> & Mod<'spacing', 12>` – returns the object type with `size`, `disabled` and `spacing` modifiers, with the selected values:
+`Mods<'size', 'small'> & Mods<'disabled', true> & Mods<'spacing', 12>` – returns the object type with `size`, `disabled` and `spacing` modifiers, with the selected values:
 ```ts
-type ComponentProps = Mod<'size', 'small'> & Mod<'disabled', true> & Mod<'spacing', 12>
+type ComponentProps = Mods<'size', 'small'> & Mods<'disabled', true> & Mods<'spacing', 12>
 
 // ComponentProps = {
 //  size?: 'small';
@@ -190,7 +224,7 @@ to all the types passed to it.
 
 Without the `SCProps` type:
 ```ts
-export const StyledComponent = styled.div<Mod<'size'> & { padding: string; }>`
+export const StyledComponent = styled.div<Mods<'size'> & { padding: string; }>`
     ${mods.size.small`
         font-size: 14px;
     `};
@@ -205,7 +239,7 @@ With type `SCProps`:
 ```ts
 import { SCProps } from '@styled-kit/mods';
 
-export const StyledComponent = styled.div<SCProps<Mod<'size'> & { padding: string; }>>`
+export const StyledComponent = styled.div<SCProps<Mods<'size'> & { padding: string; }>>`
     ${mods.size.small`
         font-size: 14px;
     `};
@@ -229,7 +263,7 @@ This means that when the `size` property is equal to `small`, the corresponding 
 
 ### Applying a single modifier
 ```ts
-export const StyledComponent = styled.div<Mod<'size'>>`
+export const StyledComponent = styled.div<Mods<'size'>>`
     ${mods.size.small`
         font-size: 14px;
     `};
@@ -248,7 +282,7 @@ This allows you to use all the values of the `'size'` modifier in the stylized c
 
 ### Using multiple modifiers
 ```ts
-export const StyledComponent = styled.div<Mod<'size' | 'disabled'>>`
+export const StyledComponent = styled.div<Mods<'size' | 'disabled'>>`
     ${mods.size.small`
         font-size: 14px;
     `}
@@ -275,7 +309,7 @@ This allows to use all values of both modifiers in a stylized component.
 
 ### Sampling limit for modifiers
 ```ts
-export const StyledComponent = styled.div<Mod<'size', 'small' | 'large'>> & Mod<'disabled', true> & Mod<'spacing', 12>>`
+export const StyledComponent = styled.div<Mods<'size', 'small' | 'large'>> & Mods<'disabled', true> & Mods<'spacing', 12>>`
     ${mods.size.small`
         font-size: 14px;
     `}

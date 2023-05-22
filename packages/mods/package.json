@@ -1,18 +1,19 @@
 {
     "name": "@styled-kit/mods",
-    "version": "0.1.0",
+    "version": "0.1.2",
     "type": "commonjs",
     "description": "Allows you to write modifiers for Styled Components and with autocomplete. As well as automatically generate for them typing.",
     "author": "Jekins",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Jekins/styled-kit"
+        "url": "https://github.com/Jekins/styled-kit/tree/main/packages/mods"
     },
     "keywords": [
         "StyledComponents",
         "CSS",
         "Modifiers",
-        "TypeScript"
+        "TypeScript",
+        "React"
     ]
 }
