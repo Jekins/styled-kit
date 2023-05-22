@@ -1,27 +1,37 @@
-import { InitModsResult, ModIsReturn, ModsObj } from './types';
+import { InitModsResult, IsModReturn, ModsObj, ModValueTypes } from './types';
 import { css } from 'styled-components';
 
-const modIs =
-    <ModName extends string, ModValue extends string | boolean | number>(
+/**
+ * The method compares the property, and its value passed to it with those passed to the Styled Component,
+ * and if they are equal, it returns the passed styles.
+ * @param modName
+ * @param modValue
+ */
+export const isMod =
+    <ModName extends string, ModValue extends ModValueTypes>(
         modName: ModName,
         modValue?: ModValue
-    ): ModIsReturn =>
+    ): IsModReturn =>
     (literals, ...interpolations) =>
     (props) => {
         const preparedTargetValue = props[`$` + modName] || props[modName];
         const targetValue = String(preparedTargetValue) ?? 'false';
 
-        // FIXME: Remove `as TemplateStringsArray` but keep using: mods.size.medium(css``)
         return targetValue === String(modValue ?? 'true')
             ? css(literals as TemplateStringsArray, ...interpolations)
             : css``;
     };
 
+/**
+ * Turns an object with modifiers and their values into an object with modifiers and values
+ * that can handle component properties and return css styles.
+ * @param mods
+ */
 export const initMods = <Mods extends ModsObj>(
     mods: Mods
 ): InitModsResult<Mods> => {
     const result = {
-        is: modIs,
+        is: isMod,
     } as InitModsResult<Mods>;
 
     for (const modName in mods) {
@@ -32,7 +42,7 @@ export const initMods = <Mods extends ModsObj>(
 
             result[modName] = {
                 ...result[modName],
-                [`${value}`]: modIs(modName, String(value)),
+                [`${value}`]: isMod(modName, String(value)),
             };
         }
     }
