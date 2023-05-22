@@ -1,6 +1,6 @@
 {
     "name": "@styled-kit/mods",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "type": "commonjs",
     "description": "Allows you to write modifiers for Styled Components and with autocomplete. As well as automatically generate for them typing.",
     "author": "Jekins",
