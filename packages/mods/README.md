@@ -4,7 +4,7 @@ This library allows you to write modifiers for [Styled Components](https://style
 and with autocomplete. As well as automatically generate for them [typing](https://www.typescriptlang.org/).
 
 ## Quick look
-### Setting up
+### Setup
 _src/styled-kit.ts_
 ```ts
 import { initMods, ModsConfigType, ModsType } from '@styled-kit/mods';
@@ -24,7 +24,7 @@ export type Mods<
   V extends ModsConfig[M] = undefined
 > = ModsType<ModsConfig, M, V>;
 ```
-### Using
+### Usage
 [Live demo](https://codesandbox.io/s/withered-firefly-zfltek)
 
 Apply the styles if the `size` property is `small`:
