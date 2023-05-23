@@ -18,6 +18,67 @@
                             }
                         ]
                     }
+                ],
+                "@typescript-eslint/no-explicit-any": "off",
+                "@typescript-eslint/padding-line-between-statements": [
+                    "error",
+                    {
+                        "blankLine": "always",
+                        "prev": "*",
+                        "next": [
+                            "return",
+                            "continue",
+                            "throw",
+                            "debugger",
+                            "interface",
+                            "type"
+                        ]
+                    },
+                    {
+                        "blankLine": "always",
+                        "prev": [
+                            "return",
+                            "continue",
+                            "throw",
+                            "debugger",
+                            "interface",
+                            "type"
+                        ],
+                        "next": "*"
+                    },
+
+                    { "blankLine": "any", "prev": "directive", "next": "*" },
+                    {
+                        "blankLine": "any",
+                        "prev": "directive",
+                        "next": "directive"
+                    },
+
+                    {
+                        "blankLine": "always",
+                        "prev": "*",
+                        "next": ["const", "let", "var"]
+                    },
+                    {
+                        "blankLine": "always",
+                        "prev": ["const", "let", "var"],
+                        "next": "*"
+                    },
+                    { "blankLine": "any", "prev": "const", "next": "const" },
+                    { "blankLine": "any", "prev": "let", "next": "let" },
+                    { "blankLine": "any", "prev": "var", "next": "var" },
+
+                    {
+                        "blankLine": "always",
+                        "prev": "block-like",
+                        "next": "*"
+                    },
+                    {
+                        "blankLine": "always",
+                        "prev": "*",
+                        "next": "block-like"
+                    },
+                    { "blankLine": "any", "prev": "case", "next": "block-like" }
                 ]
             }
         },

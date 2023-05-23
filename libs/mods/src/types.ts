@@ -16,19 +16,29 @@ export type ModValueTypes = string | number | boolean;
  */
 export type ModsObj = Record<string, readonly ModValueTypes[]>;
 
+export type Literals<
+    Props extends Record<string, any>,
+    Theme extends Record<string, any>
+> =
+    | TemplateStringsArray
+    | CSSObject
+    | InterpolationFunction<ThemedStyledProps<Props, Theme>>
+    | FlattenInterpolation<Props>;
+
+export type Interpolations<
+    Props extends Record<string, any>,
+    Theme extends Record<string, any>
+> = Array<Interpolation<ThemedStyledProps<Props, Theme>>>;
+
 /**
  * The type of data returned from the property comparison method.
  */
-export type IsModReturn = <
+export type ComparisonModReturn = <
     Props extends Record<string, any>,
     Theme extends Record<string, any>
 >(
-    literals:
-        | TemplateStringsArray
-        | CSSObject
-        | InterpolationFunction<ThemedStyledProps<Props, Theme>>
-        | FlattenInterpolation<Props>,
-    ...interpolations: Array<Interpolation<ThemedStyledProps<Props, Theme>>>
+    literals: Literals<Props, Theme>,
+    ...interpolations: Interpolations<Props, Theme>
 ) => (
     props: Props
 ) => ReadonlyArray<Interpolation<ThemedStyledProps<Props, Theme>>>;
@@ -36,7 +46,10 @@ export type IsModReturn = <
 /**
  * Type of property comparison method
  */
-type IsMethod = (modName: string, modValue?: ModValueTypes) => IsModReturn;
+type ComparisonMod = (
+    modName: string,
+    modValue?: ModValueTypes
+) => ComparisonModReturn;
 
 /**
  * Type of method for initializing modifiers relative to config
@@ -44,12 +57,15 @@ type IsMethod = (modName: string, modValue?: ModValueTypes) => IsModReturn;
 export type InitModsResult<Mods extends ModsObj> = {
     [ModName in keyof Mods]: Mods[ModName][number] extends boolean
         ? {
-              [Key in boolean as `${Key}`]: IsModReturn;
+              [Key in boolean as `${Key}`]: ComparisonModReturn;
           }
         : {
-              [Key in Exclude<Mods[ModName][number], boolean>]: IsModReturn;
+              [Key in Exclude<
+                  Mods[ModName][number],
+                  boolean
+              >]: ComparisonModReturn;
           };
-} & { is: IsMethod };
+} & { is: ComparisonMod; has: ComparisonMod };
 
 /**
  * The ModConfig allows you representing the configuration structure of modifiers

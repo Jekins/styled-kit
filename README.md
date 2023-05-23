@@ -7,7 +7,7 @@ greatly speeding up the styling process.
 
 ### Packages:
 
-[@styled-kit/mods](packages/mods/README.md) - allows you to write modifiers for Styled Components 
+[@styled-kit/mods](libs/mods/README.md) - allows you to write modifiers for Styled Components
 and with autocomplete. As well as automatically generate for them typing.
 
 ```ts
@@ -17,4 +17,3 @@ export const StyledComponent = styled.div<Mod<'size'>>`
     `};
 `;
 ```
-

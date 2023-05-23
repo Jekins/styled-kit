@@ -26,6 +26,9 @@
                 "^production",
                 "{workspaceRoot}/jest.preset.js"
             ]
+        },
+        "e2e": {
+            "inputs": ["default", "^production"]
         }
     },
     "namedInputs": {
@@ -37,10 +40,27 @@
             "!{projectRoot}/tsconfig.spec.json",
             "!{projectRoot}/jest.config.[jt]s"
         ],
-        "sharedGlobals": []
+        "sharedGlobals": ["{workspaceRoot}/babel.config.json"]
     },
     "workspaceLayout": {
-        "appsDir": "packages",
-        "libsDir": "packages"
+        "appsDir": "apps",
+        "libsDir": "libs"
+    },
+    "generators": {
+        "@nx/react": {
+            "application": {
+                "style": "styled-components",
+                "linter": "eslint",
+                "bundler": "webpack",
+                "babel": true
+            },
+            "component": {
+                "style": "styled-components"
+            },
+            "library": {
+                "style": "styled-components",
+                "linter": "eslint"
+            }
+        }
     }
 }

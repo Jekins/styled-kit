@@ -1,6 +1,6 @@
 {
     "name": "@styled-kit/mods",
-    "version": "0.2.6",
+    "version": "0.3.0",
     "type": "commonjs",
     "description": "Allows you to write modifiers for Styled Components and Linaria with autocomplete. As well as automatically generate for them types.",
     "author": "Jekins",
@@ -20,5 +20,9 @@
         "Style props",
         "CSS-in-js",
         "Theming"
-    ]
+    ],
+    "dependencies": {
+        "styled-components": "^5.3.10",
+        "tslib": "^2.3.0"
+    }
 }
