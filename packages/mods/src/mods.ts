@@ -15,9 +15,9 @@ export const isMod =
     (literals, ...interpolations) =>
     (props) => {
         const preparedTargetValue = props[`$` + modName] || props[modName];
-        const targetValue = String(preparedTargetValue) ?? 'false';
+        const targetValue = String(preparedTargetValue ?? false);
 
-        return targetValue === String(modValue ?? 'true')
+        return targetValue === String(modValue ?? true)
             ? css(literals as TemplateStringsArray, ...interpolations)
             : css``;
     };
