@@ -3,12 +3,10 @@ Modifiers with autocomplete for Styled Components and Linaria
 </h1>
 
 ---
-<div align="center">
 [![Build Status][build-badge]][build]
 [![Version][version-badge]][package]
 [![MIT License][license-badge]][license]
 ![size][]
-</div>
 
 This library allows you to write modifiers for [Styled Components](https://styled-components.com/)
 and [Linaria](https://linaria.dev/) via Dot Notation
