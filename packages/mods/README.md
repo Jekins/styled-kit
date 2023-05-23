@@ -197,7 +197,7 @@ export type Mods<
 export type RMods<
   M extends keyof ModsConfig = keyof ModsConfig,
   V extends ModsConfig[M] = undefined
-> = Required<Mods<M, V>;
+> = Required<Mods<M, V>>;
 ```
 
 `ModsConfig` is a type representing the configuration structure of modifiers.

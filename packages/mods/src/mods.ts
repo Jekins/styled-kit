@@ -16,10 +16,19 @@ export const isMod =
     (props) => {
         const preparedTargetValue = props[`$` + modName] || props[modName];
         const targetValue = String(preparedTargetValue ?? false);
+        const isApplyStyles = targetValue === String(modValue ?? true);
 
-        return targetValue === String(modValue ?? true)
-            ? css(literals as TemplateStringsArray, ...interpolations)
-            : css``;
+        if (isApplyStyles) {
+            if (interpolations.length) {
+                return css(literals as TemplateStringsArray, ...interpolations);
+            }
+
+            return css`
+                ${literals};
+            `;
+        }
+
+        return css``;
     };
 
 /**
