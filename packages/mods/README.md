@@ -1,22 +1,45 @@
-# Modifiers with autocomplete for Styled Components
+<h1 align="center">
+Modifiers with autocomplete for Styled Components and Linaria
+</h1>
 
-This library allows you to write modifiers for [Styled Components](https://styled-components.com/) via Dot Notation
-and with autocomplete. As well as automatically generate for them [typing](https://www.typescriptlang.org/).
+---
+<div align="center">
+[![Build Status][build-badge]][build]
+[![Version][version-badge]][package]
+[![MIT License][license-badge]][license]
+![size][]
+</div>
 
-## Quick look
+This library allows you to write modifiers for [Styled Components](https://styled-components.com/)
+and [Linaria](https://linaria.dev/) via Dot Notation
+and with autocomplete. As well as automatically generate for them [types](https://www.typescriptlang.org/).
+
+## Features
+
+- Quickly write styles with respect to modifiers
+- Using modifiers via Dot Notation
+- Writing modifiers with autocomplete
+- Uniform modifiers and their values
+- Automatic types of modifiers
+- Possibility to use private modifiers
+
+## A Quick Look
 ### Setup
 _src/styled-kit.ts_
 ```ts
 import { initMods, ModsConfigType, ModsType } from '@styled-kit/mods';
 
+// Configure modifier names and their values
 const config = <const>{
   size: ['small', 'medium', 'large'],
   spacing: [8, 12],
   disabled: [true, false],
 };
 
+// Initializing modifiers by config
 export const mods = initMods(config);
 
+// Creating types for modifiers
 type ModsConfig = ModsConfigType<typeof config>;
 
 export type Mods<
@@ -25,8 +48,6 @@ export type Mods<
 > = ModsType<ModsConfig, M, V>;
 ```
 ### Usage
-[Live demo](https://codesandbox.io/s/withered-firefly-zfltek)
-
 Apply the styles if the `size` property is `small`:
 ```ts
 import { mods, Mods } from './styled-kit'
@@ -71,16 +92,34 @@ export const StyledComponent = styled.div<{ customProp: boolean }>`
 `;
 ```
 
-# Contents
-[Install](#install)  
-[Setup modifiers](#setupMods)  
-[Setup types for modifiers](#setupTypes)  
-[Usage types](#usageTypes)  
-[Usage modifiers](#usageMods)
-[Highlight syntax](#highlight)
+## Demo
+
+[![Live demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/withered-firefly-zfltek)
 
 
-<a name="install"><h2>Install</h2></a>
+# Documentation
+- [Installation](#installation)  
+- [Setup modifiers](#setup-modifiers)
+    - [Creating a modifiers configuration](#creating-a-modifiers-configuration)
+    - [Initializing the configuration](#initializing-the-configuration)
+- [Setup types](#setup-types)  
+- [Usage types](#usage-types)
+    - [Type `Mods`](#type-mod)
+    - [Type `SCProps`](#type-scprops)
+- [Usage modifiers](#usage-modifiers)
+  - [Applying a single modifier](#applying-a-single-modifier)
+  - [Using multiple modifiers](#using-multiple-modifiers)
+  - [Sampling limit for modifiers](#sampling-limit-for-modifiers)
+  - [Using private modifiers](#using-private-modifiers)
+- [Highlight syntax](#highlight-syntax)
+  - [Editor Plugins](#editor-plugins)
+  - [VS Code](#vs-code)
+  - [WebStorm](#webstorm)
+  - [Atom](#atom)
+  - [Sublime text](#sublime-text)
+
+
+## Installation
 You can install the library using the `npm` or `Yarn` package manager.
 
 Installation example using `npm`:
@@ -93,11 +132,11 @@ An example installation using `Yarn':
 yarn add @styled-kit/mods
 ```
 
-<a name="setupMods"><h2>Setup modifiers</h2></a>
+## Setup modifiers
 To be able to use modifiers via Dot Notation,
 you must define in advance what they can be and what their values are. 
 
-### Creating a modifier configuration
+### Creating a modifiers configuration
 To configure modifiers, create a `config` configuration object.
 
 You can create this object in any file in your project, but as an option,
@@ -137,7 +176,7 @@ const config = <const>{
 export const mods = initMods(config);
 ```
 
-<a name="setupTypes"><h2>Setup types for modifiers</h2></a>
+## Setup types
 To use autocomplete and types for modifiers, you must configure the appropriate TypeScript types.
 
 You can make type settings in any file of your project, but as an option,
@@ -163,14 +202,14 @@ export type Mods<
 > = ModsType<ModsConfig, M, V>;
 ```
 
-`ModConfig` is a type representing the configuration structure of modifiers.
-It is only needed to create a `Mod` type.
+`ModsConfig` is a type representing the configuration structure of modifiers.
+It is only needed to create a `Mods` type.
 
-`Mod` is a type representing modifiers, where `M` is the name of the modifier,
+`Mods` is a type representing modifiers, where `M` is the name of the modifier,
 and `V` is the value of the modifier _(optional)_.
 
-<a name="usageTypes"><h2>Usage types</h2></a>
-### Type `Mod`.
+## Usage types
+### Type `Mods`
 This type allows you to define which properties a particular Styled Component can take.
 
 `Mods<'size'>` - returns the type of object with the `size` modifier, with all its values from `config`:
@@ -212,7 +251,7 @@ type ComponentProps = Mods<'size', 'small'> & Mods<'disabled', true> & Mods<'spa
 // }
 ```
 
-## Type `SCProps`
+### Type `SCProps`
 Since version 16 of React [all specified attributes remain on DOM elements](https://legacy.reactjs.org/blog/2017/09/08/dom-attributes-in-react-16.html)
 and are not removed even if React does not recognize them. That said, if these attributes are not known to React,
 you will see a `Warning' in the developer console in the browser.
@@ -224,7 +263,7 @@ The `SCProps` type will allow you to write Styled Component property types witho
 but still have valid typing. Internally, it prefixes all types passed to it with `$`.
 to all the types passed to it.
 
-Without the `SCProps` type:
+_Without the `SCProps` type:_
 ```ts
 export const StyledComponent = styled.div<Mods<'size'> & { padding: string; }>`
     ${mods.size.small`
@@ -237,7 +276,7 @@ export const StyledComponent = styled.div<Mods<'size'> & { padding: string; }>`
 <StyledComponent size='small' padding='12px' />
 ```
 
-With type `SCProps`:
+_With the `SCProps` type:_
 ```ts
 import { SCProps } from '@styled-kit/mods';
 
@@ -252,7 +291,7 @@ export const StyledComponent = styled.div<SCProps<Mods<'size'> & { padding: stri
 <StyledComponent $size='small' $padding='12px' />
 ```
 
-<a name="usageMods"><h2>Usage modifiers</h2></a>
+## Usage modifiers
 After initializing the modifiers and configuring the types, you can use them in stylized components.
 
 The use of modifiers is done through Dot Notation:
@@ -279,7 +318,7 @@ export const StyledComponent = styled.div<Mods<'size'>>`
     `};
 `;
 ```
-In this example, we pass only the name of the `'size'` modifier to the `Mod` type.
+In this example, we pass only the name of the `'size'` modifier to the `Mods` type.
 This allows you to use all the values of the `'size'` modifier in the stylized component.
 
 ### Using multiple modifiers
@@ -306,12 +345,16 @@ export const StyledComponent = styled.div<Mods<'size' | 'disabled'>>`
     `}
 `;
 ```
-In this example, we pass several modifier names `'size'` and `'disabled'` to the `Mod` type.
+In this example, we pass several modifier names `'size'` and `'disabled'` to the `Mods` type.
 This allows to use all values of both modifiers in a stylized component.
 
 ### Sampling limit for modifiers
 ```ts
-export const StyledComponent = styled.div<Mods<'size', 'small' | 'large'>> & Mods<'disabled', true> & Mods<'spacing', 12>>`
+export const StyledComponent = styled.div<
+  Mods<'size', 'small' | 'large'>>
+  & Mods<'disabled', true>
+  & Mods<'spacing', 12>
+>`
     ${mods.size.small`
         font-size: 14px;
     `}
@@ -370,8 +413,8 @@ export const StyledComponent = styled.div<{ big: boolean; }>`
 `;
 ```
 
-<a name="highlight"><h2>Highlight syntax</h2></a>
-In order to make syntax highlighting in the IDE, you need to install the styled-components plugin.
+## Highlight syntax
+In order to make syntax highlighting in the IDE, you need to install the styled-components [plugin](#editor-plugins).
 
 In most of the plugins for styled-components it is possible to add a keyword in relation to which the syntax highlighting will be performed.
 
@@ -381,3 +424,24 @@ After installing the plugin, go to `WebStorm/Preferences/Languages & Frameworks/
 click on `+` and add the keyword `mods`.
 
 After that, the CSS syntax will be highlighted in the styles defined in `mods`.
+
+### Editor Plugins
+
+#### VS Code
+
+- Syntax Highlighting - [language-babel](https://marketplace.visualstudio.com/items?itemName=mgmcdermott.vscode-language-babel)
+- Autocompletion - [vscode-styled-components](https://marketplace.visualstudio.com/items?itemName=styled-components.vscode-styled-components)
+- Linting - [stylelint](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint)
+
+#### WebStorm
+
+- Syntax Highlighting & Autocompletion - [webstorm-styled-components](https://plugins.jetbrains.com/plugin/9997-styled-components--styled-jsx)
+
+#### Atom
+
+- Syntax Highlighting and Autocompletion - [language-babel](https://atom.io/packages/language-babel)
+
+#### Sublime Text
+
+- Syntax Highlighting & Autocompletion - [Naomi](https://packagecontrol.io/packages/Naomi), [JSCustom](https://packagecontrol.io/packages/JSCustom) (refer to document on how to turn on Styled Component syntax)
+- Linting - [SublimeLinter-stylelint](https://packagecontrol.io/packages/SublimeLinter-stylelint), [LSP Stylelint](https://packagecontrol.io/packages/LSP-stylelint)
