@@ -1,8 +1,5 @@
-<h1 align="center">
-Modifiers with autocomplete for Styled Components and Linaria
-</h1>
+# Modifiers with autocomplete for Styled Components and Linaria
 
----
 This library allows you to write modifiers for [Styled Components](https://styled-components.com/)
 and [Linaria](https://linaria.dev/) via Dot Notation
 and with autocomplete. As well as automatically generate for them [types](https://www.typescriptlang.org/).
