@@ -1,12 +1,12 @@
-import { ModsConfigType, ModsType } from '@styled-kit/mods';
+import { Modifiers, ModifiersConfig } from '@styled-kit/mods';
 import { config } from './config';
 
-type ModsConfig = ModsConfigType<typeof config>;
+type ModsConfig = ModifiersConfig<typeof config>;
 
 export type Mods<
     M extends keyof ModsConfig,
     V extends ModsConfig[M] = undefined
-> = ModsType<ModsConfig, M, V>;
+> = Modifiers<ModsConfig, M, V>;
 
 export type RMods<
     M extends keyof ModsConfig = keyof ModsConfig,

@@ -2,19 +2,143 @@
 
 This library allows you to write modifiers for [Styled Components](https://styled-components.com/)
 and [Linaria](https://linaria.dev/) via Dot Notation
-and with autocomplete. As well as automatically generate for them [types](https://www.typescriptlang.org/).
+and with autocomplete. As well as automatically generate for them [types](https://www.typescriptlang.org/). And that's not all :sunglasses:.
 
 ## Features
 
--   Quickly write styles with respect to modifiers
+-   Quickly writing styles in relation to modifiers
 -   Using modifiers via Dot Notation
 -   Writing modifiers with autocomplete
 -   Uniform modifiers and their values
--   Automatic types of modifiers
--   Possibility to use private modifiers
+-   Automatic type generation for modifiers
+-   Possibility to use custom modifiers
+-   Applying styles relative to multiple modifiers or multiple values
 -   Ultra-small size
 
 ## A Quick Look
+
+### Demo
+
+[![Live demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/interesting-monad-c954o5)
+
+### Usage
+
+Apply styles for any `size` property value or any `color` value:
+
+```ts
+import { mods, Mods } from '../shared/styled';
+
+export const StyledComponent = styled.div<Mods<'size' | 'color'>>`
+    // Call as literals
+    ${mods.size`
+        padding: 20px;
+        margin: 32px;
+    `};
+
+    // Call as function
+    ${mods.color(
+        (value) => css`
+            color: ${value};
+            border: 1px solid;
+        `
+    )};
+`;
+```
+
+```tsx
+<StyledComponent color="blue" size="small" />
+```
+
+---
+
+Apply styles for `size='small'` or `disabled={true}`:
+
+```ts
+import { mods, Mods } from '../shared/styled';
+
+export const StyledComponent = styled.div<
+    Mods<'size', 'small' | 'medium'> & Mods<'disabled'>
+>`
+    ${mods.size.small`
+        font-size: 14px;
+    `};
+
+    ${mods.size.medium`
+        font-size: 16px;
+    `};
+
+    ${mods.disabled.true`
+        color: gray;
+    `};
+`;
+```
+
+```tsx
+<StyledComponent size="small" disabled />
+```
+
+---
+
+Apply styles if `size` is `undefined` or `color` is not `blue`:
+
+```ts
+import { mods, Mods } from '../shared/styled';
+
+export const StyledComponent = styled.div<Mods<'size' | 'color'>>`
+    ${mods.no.size`
+        font-size: 14px;
+    `};
+
+    ${mods.no.color.blue`
+        border: 1px solid black;
+    `};
+`;
+```
+
+```tsx
+<StyledComponent color="green" />
+```
+
+---
+
+Apply styles for any value of the `customProp` property:
+
+```ts
+import { mods, Mods } from '../shared/styled';
+
+export const StyledComponent = styled.div<{ customProp: string }>`
+    ${mods('customProp')`
+        background: black;
+    `};
+`;
+```
+
+```tsx
+<StyledComponent customProp="something" />
+```
+
+---
+
+Apply styles for `customProp='customValue'`:
+
+```ts
+import { mods, Mods } from '../shared/styled';
+
+export const StyledComponent = styled.div<{ customProp: string }>`
+    ${mods('customProp', 'customValue')`
+        background: black;
+    `};
+`;
+```
+
+```tsx
+<StyledComponent customProp="customValue" />
+```
+
+---
+
+:point_up: **These are not all possible uses of modifiers.**
+**[View more options](#usage-modifiers)**
 
 ### Setup
 
@@ -23,6 +147,7 @@ _src/shared/styled/config.ts_
 ```ts
 // Configure modifier names and their values
 const config = {
+    color: ['red', 'green', 'blue'],
     size: ['small', 'medium', 'large'],
     spacing: [8, 12],
     disabled: [true, false],
@@ -32,15 +157,15 @@ const config = {
 _src/shared/styled/types.ts_
 
 ```ts
-import { ModsConfigType, ModsType } from '@styled-kit/mods';
+import { ModifiersConfig, Modifiers } from '@styled-kit/mods';
 
 // Creating types for modifiers
-type ModsConfig = ModsConfigType<typeof config>;
+type ModsConfig = ModifiersConfig<typeof config>;
 
 export type Mods<
-    M extends keyof ModsConfig = keyof ModsConfig,
-    V extends ModsConfig[M] = undefined
-> = ModsType<ModsConfig, M, V>;
+    N extends keyof ModsConfig = keyof ModsConfig,
+    V extends ModsConfig[N] = undefined
+> = Modifiers<ModsConfig, N, V>;
 ```
 
 _src/shared/styled/index.ts_
@@ -54,60 +179,6 @@ export const mods = initMods(config);
 export type { Mods } from './types';
 ```
 
-### Usage
-
-Apply the styles if the `size` property is `small`:
-
-```ts
-import { mods, Mods } from '../shared/styled';
-
-export const StyledComponent = styled.div<Mods<'size'>>`
-    ${mods.size.small`
-        font-size: 14px;
-    `};
-`;
-```
-
-Apply the styles if the `disabled` property is `true`:
-
-```ts
-import { mods, Mods } from '../shared/styled';
-
-export const StyledComponent = styled.div<Mods<'disabled'>>`
-    ${mods.disabled.true`
-        color: gray;
-    `};
-`;
-```
-
-Apply styles if the custom property `customProp` is equal to `customValue`:
-
-```ts
-import { mods, Mods } from '../shared/styled';
-
-export const StyledComponent = styled.div<{ customProp: string }>`
-    ${mods.is('customProp', 'customValue')`
-        background: black;
-    `};
-`;
-```
-
-Apply the styles if the custom property `customProp` is not `null` or `undefined`:
-
-```ts
-import { mods, Mods } from '../shared/styled';
-
-export const StyledComponent = styled.div<{ customProp: string }>`
-    ${mods.has('customProp')`
-        background: black;
-    `};
-`;
-```
-
-## Demo
-
-[![Live demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/withered-firefly-zfltek)
-
 # Documentation
 
 -   [Installation](#installation)
@@ -116,17 +187,16 @@ export const StyledComponent = styled.div<{ customProp: string }>`
     -   [Creating a types](#creating-a-types)
     -   [Initializing the modifiers](#initializing-the-modifiers)
 -   [Usage types](#usage-types)
-    -   [Type `Mods`](#type-mod)
+    -   [Type `Mods`](#type-mods)
     -   [Type `RMods`](#type-rmods)
     -   [Type `SCProps`](#type-scprops)
 -   [Usage modifiers](#usage-modifiers)
-    -   [Using a single modifier](#using-a-single-modifier)
-    -   [Using multiple modifiers](#using-multiple-modifiers)
-    -   [Sampling limit for modifiers](#sampling-limit-for-modifiers)
-    -   [Using multiple conditions](#using-multiple-conditions)
-    -   [Using private modifiers](#using-private-modifiers)
-        -   [Method `mods.is`](#method-modsis)
-        -   [Method `mods.has`](#method-modshas)
+    -   [Using in Object mode](#using-in-object-mode)
+    -   [Using in Function mode](#using-in-function-mode)
+    -   [Call as a literals](#call-as-a-literals)
+    -   [Call as a function](#call-as-a-function)
+    -   [Using mixins](#using-mixins)
+    -   [Additional features](#additional-features)
 -   [Highlight syntax](#highlight-syntax)
     -   [Editor Plugins](#editor-plugins)
         -   [VS Code](#vs-code)
@@ -166,6 +236,7 @@ _src/shared/styled/config.ts_
 
 ```ts
 const config = {
+    color: ['red', 'green', 'blue'],
     size: ['small', 'medium', 'large'],
     spacing: [8, 12],
     disabled: [true, false],
@@ -173,6 +244,7 @@ const config = {
 ```
 
 Describe in `config` what modifiers with what values you can have.
+Describe those modifiers that you are going to reuse in different components.
 Over time, you can add to this object as new modifiers are needed.
 
 <b>Note:</b> In TypeScript you must specify the `as const` type for the `config` object,
@@ -188,25 +260,25 @@ you can make such a file system:
 _src/shared/styled/types.ts_
 
 ```ts
-import { ModsConfigType, ModsType } from '@styled-kit/mods';
+import { ModifiersConfig, Modifiers } from '@styled-kit/mods';
 
-type ModsConfig = ModsConfigType<typeof config>;
+type ModsConfig = ModifiersConfig<typeof config>;
 
 export type Mods<
-    M extends keyof ModsConfig = keyof ModsConfig,
-    V extends ModsConfig[M] = undefined
-> = ModsType<ModsConfig, M, V>;
+    N extends keyof ModsConfig = keyof ModsConfig,
+    V extends ModsConfig[N] = undefined
+> = Modifiers<ModsConfig, N, V>;
 
 export type RMods<
-    M extends keyof ModsConfig = keyof ModsConfig,
-    V extends ModsConfig[M] = undefined
-> = Required<Mods<M, V>>;
+    N extends keyof ModsConfig = keyof ModsConfig,
+    V extends ModsConfig[N] = undefined
+> = Required<Mods<N, V>>;
 ```
 
 `ModsConfig` is a type representing the configuration structure of modifiers.
 It is only needed to create a `Mods` type.
 
-`Mods` is a type representing modifiers, where `M` is the name of the modifier,
+`Mods` is a type representing modifiers, where `N` is the name of the modifier,
 and `V` is the value of the modifier _(optional)_. All modifiers can be `undefined`.
 
 `RMods` This is a copy of `Mods`, but all modifiers `Required` and cannot be `undefined`.
@@ -224,7 +296,7 @@ import { initMods } from '@styled-kit/mods';
 import { config } from './config';
 
 export const mods = initMods(config);
-export type { Mods } from './types';
+export type { Mods, RMods } from './types';
 ```
 
 ## Usage types
@@ -243,6 +315,8 @@ type ComponentProps = Mods<'size'>;
 // }
 ```
 
+---
+
 `Mods<'size' | 'disabled'>` - returns object type with `size` and `disabled` modifiers, with all their values
 from `config`:
 
@@ -255,6 +329,8 @@ type ComponentProps = Mods<'size' | 'disabled'>;
 // }
 ```
 
+---
+
 `Mods<'size', 'small' | 'large'>` – Returns the object type with the `size` modifier, with `small` and `large` values:
 
 ```ts
@@ -264,6 +340,8 @@ type ComponentProps = Mods<'size', 'small' | 'large'>;
 //    size?: 'small' | 'large';
 // }
 ```
+
+---
 
 `Mods<'size', 'small'> & Mods<'disabled', true> & Mods<'spacing', 12>` – returns the object type with `size`, `disabled`
 and `spacing` modifiers, with the selected values:
@@ -285,32 +363,14 @@ type ComponentProps = Mods<'size', 'small'> &
 As stated earlier, this is a copy of the `Mods` type, but wrapped in `Required`. This removes the possibility of passing
 a `undefined` value to the modifier.
 
-You may need `RMods` if you want to make the modifier required or describe `mixin`:
+You may need `RMods` if you want to make the modifier **required**:
 
 ```ts
-type ComponentProps = RMods<'size'>;
+interface ComponentProps extends RMods<'size'> {}
 
-// ComponentProps = {
+// interface ComponentProps {
 //    size: 'small' | 'medium' | 'large';
 // }
-```
-
-Creating a `mixin`:
-
-```ts
-const sizeMixin = (
-    spacing: RMods['spacing'],
-    fontSize: RMods['fontSize']
-) => css`
-    padding: ${spacing}px;
-    font-size: ${fontSize}px;
-`;
-
-const StyledComponen = styled.div<Mods<'size'>>`
-    ${mods.size.small(sizeMixin(12, 16))};
-    ${mods.size.medium(sizeMixin(16, 20))};
-    ${mods.size.large(sizeMixin(20, 24))};
-`;
 ```
 
 ### Type `SCProps`
@@ -337,9 +397,11 @@ export const StyledComponent = styled.div<Mods<'size'> & { padding: string }>`
 
     padding: ${({ padding }) => padding};
 `;
-
-<StyledComponent size="small" padding="12px" />;
 ```
+```tsx
+<StyledComponent size="small" padding="12px" />
+```
+---
 
 _With the `SCProps` type:_
 
@@ -355,179 +417,512 @@ export const StyledComponent = styled.div<
 
     padding: ${({ $padding }) => $padding};
 `;
-
-<StyledComponent $size="small" $padding="12px" />;
 ```
+```tsx
+<StyledComponent $size="small" $padding="12px" />
+```
+
+:point_up: **You do not need to add the `$` prefix to the `mods` modifiers. Modifiers are automatically searched with and without the prefix.**
+
 
 ## Usage modifiers
 
-After initializing the modifiers and configuring the types, you can use them in stylized components.
+The library assumes a large number of options for using modifiers. Each of them can be called as a literal, as a function, with negation, without negation, in object mode or in function mode.
 
-The use of modifiers is done through Dot Notation:
+Let's take a closer look at how modifiers can be used:
 
+### Using in Object mode
+The `Object mode` allows you to use Dot Notation to use modifiers that you enter in `config` beforehand.
+
+This mode is best suited for applying styles relative to common modifiers that will be reused in other components.
+
+The features of `Object mode` modifiers:
+- Writing modifiers with Dot Notation 
+- When writing modifiers, you will have autocomplete
+- Types will be automatically generated based on your `config`, which you can use with the `Mods` type that you create when you initialize the library
+- You will get modifiers that are reused throughout the project in a single format
+
+**Styles will be applied if:**
+
+_`color` is not `undefined`_
 ```ts
-${mods.size.small`
-    font-size: 14px;
-`};
+export const ModsColor = styled.div<Mods<'color'>>`
+    ${mods.color`
+        color: blue;
+    `};
+`;
+```
+```tsx
+<ModsColor color='blue' />
+```
+---
+
+_`color` is `undefined`_
+```ts
+export const ModsNoColor = styled.div<Mods<'color'>>`
+    ${mods.no.color`
+        color: blue;
+    `};
+`;
+```
+```tsx
+<ModsNoColor />
+```
+---
+
+_`color` is `blue` and is not `undefined`_
+```ts
+export const ModsColorBlue = styled.div<Mods<'color'>>`
+    ${mods.color.blue`
+        color: blue;
+    `};
+`;
+```
+```tsx
+<ModsColorBlue color='blue' />
+```
+---
+
+_`color` is not `blue` and is not `undefined`_
+```ts
+export const ModsNoColorBlue = styled.div<Mods<'color'>>`
+    ${mods.no.color.blue`
+        color: white;
+    `};
+`;
+```
+```tsx
+<ModsNoColorBlue color='white' />
 ```
 
-This means that when the `size` property is equal to `small`, the corresponding styles will be applied.
+### Using in Function mode
 
-### Using a single modifier
+The `Function mode` allows you to apply styles using modifiers that are not in your `config`.
 
+This mode is best suited for applying styles relative to private modifiers which will not be reused in other components.
+
+The features of `Function mode` modifiers:
+- Using custom modifiers that are not in `config`
+- Ability to specify styles relative to multiple modifiers
+- Ability to specify styles relative to multiple modifier values
+- Types for them are written manually
+- No autocomplete when writing
+
+**Styles will be applied if:**
+
+_`color` is not `undefined`_
+```ts
+export const FnModsColor = styled.div<{ color?: string; }>`
+    ${mods('color')`
+        color: blue;
+    `};
+`;
+```
+```tsx
+<FnModsColor color='blue' />
+```
+---
+
+_`color` is `undefined`_
+```ts
+export const FnModsNoColor = styled.div<{ color?: string; }>`
+    ${mods.no('color')`
+        color: blue;
+    `};
+`;
+```
+```tsx
+<FnModsNoColor />
+```
+---
+
+_`color` is `blue` and is not `undefined`_
+```ts
+export const FnModsColorBlue = styled.div<{ color?: string; }>`
+    ${mods('color', 'blue')`
+        color: blue;
+    `};
+`;
+```
+```tsx
+<FnModsColorBlue color='blue' />
+```
+---
+
+_`color` is not `blue` and is not `undefined`_
+```ts
+export const FnModsNoColorBlue = styled.div<{ color?: string; }>`
+    ${mods.no('color', 'blue')`
+        color: black;
+    `};
+`;
+```
+```tsx
+<FnModsNoColorBlue color='black' />
+```
+---
+
+_`color` is `blue` or `black` and is not `undefined`_
+```ts
+export const FnModsColorBlueBlack = styled.div<{ color?: string; }>`
+    ${mods('color', ['blue', 'black'])`
+        color: black;
+    `};
+`;
+```
+```tsx
+<FnModsColorBlueBlack color='black' />
+```
+---
+
+_`color` is not `blue` or `black` and is not `undefined`_
+```ts
+export const FnModsNoColorBlueBlack = styled.div<{ color?: string; }>`
+    ${mods.no('color', ['blue', 'black'])`
+        color: white;
+    `};
+`;
+```
+```tsx
+<FnModsNoColorBlueBlack color='white' />
+```
+---
+
+_`color` and `bg` is not `undefined`_
+```ts
+export const FnModsColorBg = styled.div<{ color?: string; bg?: string; }>`
+    ${mods(['color', 'bg'])`
+        color: black;
+    `};
+`;
+```
+```tsx
+<FnModsColorBg color='black' bg='green' />
+```
+---
+
+_`color` and `bg` is `undefined`_
+```ts
+export const FnModsNoColorBg = styled.div<{ color?: string; bg?: string; }>`
+    ${mods.no(['color', 'bg'])`
+        color: black;
+    `};
+`;
+```
+```tsx
+<FnModsNoColorBg />
+```
+---
+
+_`color` and `bg` is `blue` and is not `undefined`_
+```ts
+export const FnModsColorBgBlue = styled.div<{ color?: string; bg?: string; }>`
+    ${mods(['color', 'bg'], 'blue')`
+        color: black;
+    `};
+`;
+```
+```tsx
+<FnModsColorBgBlue color='blue' bg='blue' />
+```
+---
+
+_`color` and `bg` is not `blue` and is not `undefined`_
+```ts
+export const FnModsNoColorBgBlue = styled.div<{ color?: string; bg?: string; }>`
+    ${mods.no(['color', 'bg'], 'blue')`
+        color: black;
+    `};
+`;
+```
+```tsx
+<FnModsNoColorBgBlue color='black' bg='green' />
+```
+---
+
+_`color` and `bg` together is `blue` or `green` and is not `undefined`_
+```ts
+export const FnModsColorBgBlueGreen = styled.div<{ color?: string; bg?: string; }>`
+    ${mods(['color', 'bg'], ['blue', 'green'])`
+        color: black;
+    `};
+`;
+```
+```tsx
+<FnModsColorBgBlueGreen color='blue' bg='blue' />
+```
+---
+
+_`color` and `bg` together is not `blue` or `green` and is not `undefined`_
+```ts
+export const FnModsNoColorBgBlueGreen = styled.div<{ color?: string; bg?: string; }>`
+    ${mods.no(['color', 'bg'], ['blue', 'green'])`
+        color: black;
+    `};
+`;
+```
+```tsx
+<FnModsNoColorBgBlueGreen color='blue' bg='green' />
+```
+
+### Call as a literals
+You can call any modifier, regardless of mode, as a literal and immediately pass the necessary styles.
+
+#### Object mode
 ```ts
 export const StyledComponent = styled.div<Mods<'size'>>`
+    ${mods.size`
+        padding: 20px;
+    `};
+    
     ${mods.size.small`
         font-size: 14px;
-    `};
-
-    ${mods.size.medium`
-        font-size: 16px;
-    `};
-
-    ${mods.size.large`
-        font-size: 20px;
     `};
 `;
 ```
+```tsx
+<StyledComponent size="small" />
+```
+---
 
-In this example, we pass only the name of the `'size'` modifier to the `Mods` type.
-This allows you to use all the values of the `'size'` modifier in the stylized component.
+#### Function mode
+```ts
+export const StyledComponent = styled.div<Mods<'size'> & { padding: string; }>`
+    ${mods('size')`
+        font-size: 16px;
+        padding: ${(props) => props.padding};
+    `};
+    
+    ${mods('size', 'small')`
+        font-size: 14px;
+        padding: ${(props) => props.padding};
+    `};
+`;
+```
+```tsx
+<StyledComponent size="small" />
+```
 
-### Using multiple modifiers
+### Call as a function
+You can call any modifier, regardless of mode, as a function that will return the `css` method from `styled-components`.
+
+The feature of this method is that you get possible values and all the properties of the styled component in the arguments of the passed callback function.
+
+#### Object mode
+```ts
+export const StyledComponent = styled.div<Mods<'size'> & { padding: string; }>`
+    ${mods.size(
+        (value, props) => css`
+            font-size: ${value === 'small' ? '14px' : '16px'};
+            padding: ${props.padding};
+        `
+    )};
+    
+    ${mods.size.small(
+        (value, props) => css`
+            font-size: 14px;
+            padding: ${props.padding};
+        `
+    )};
+`;
+```
+```tsx
+<StyledComponent size="small" />
+```
+---
+
+#### Function mode
+```ts
+export const StyledComponent = styled.div<Mods<'size'> & { padding: string; }>`
+    ${mods('size')(
+        (value, props) => css`
+            font-size: ${value === 'small' ? '14px' : '16px'};
+            padding: ${props.padding};
+        `
+    )};
+    
+    ${mods('size', 'small')(
+        (value, props) => css`
+            font-size: 14px;
+            padding: ${props.padding};
+        `
+    )};
+`;
+```
+```tsx
+<StyledComponent size="small" />
+```
+
+:point_up: **IMPORTANT:**
+If you use `Function mode`, use modifiers from `config` with type `Mods` and pass an array of modifiers or an array of modifier values, be sure to put `as const` after the array so that TypeScript correctly displays which properties will be available in the `value` argument passed to the callback function.
+
+_For example:_
+```ts
+const config = {
+    color: 'white' | 'blue' | 'black',
+    bg: 'green' | 'blue' | 'black',
+    ...
+};
+
+export const StyledComponent = styled.div<Mods<'color' | 'bg'>>`
+    ${mods('color', ['blue', 'black'] as const)(
+        (value, props) => css`
+            // value: 'blue' | 'black'
+        `
+    )};
+    
+    ${mods.no('color', ['blue', 'black'] as const)(
+        (value, props) => css`
+            // value: 'white'
+        `
+    )};
+
+    ${mods(['color', 'bg'] as const)(
+        (value, props) => css`
+            // value: { color: 'white' | 'blue' | 'black', bg: 'green' | 'blue' | 'black' }
+        `
+    )};
+
+    ${mods.no(['color', 'bg'] as const)(
+        (value, props) => css`
+            // value: { color: undefined, bg: undefined }
+        `
+    )};
+
+    ${mods(['color', 'bg'] as const, 'blue')(
+        (value, props) => css`
+            // value: 'blue'
+        `
+    )};
+
+    ${mods.no(['color', 'bg'] as const, 'blue')(
+        (value, props) => css`
+            // value: { color: 'white' | 'black', bg: 'green' | 'black' }
+        `
+    )};
+    
+    ${mods(['color', 'bg'] as const, ['blue', 'black'] as const)(
+        (value, props) => css`
+            // value: { color: 'blue' | 'black', bg: 'blue' | 'black' }
+        `
+    )};
+    
+    ${mods.no(['color', 'bg'] as const, ['blue', 'black'] as const)(
+        (value, props) => css`
+            // value: { color: 'white' | 'blue' | 'black', bg: 'green' | 'blue' | 'black' }
+        `
+    )};
+`;
+```
+
+### Using mixins
+To apply a set of styles for different modifier values, you can create mixins.
 
 ```ts
-export const StyledComponent = styled.div<Mods<'size' | 'disabled'>>`
-    ${mods.size.small`
-        font-size: 14px;
-    `}
+const sizeMixin = (
+    spacing: RMods['spacing'],
+    fontSize: RMods['fontSize']
+) => css`
+    padding: ${spacing}px;
+    font-size: ${fontSize}px;
+`;
 
-    ${mods.size.medium`
-        font-size: 16px;
-    `};
+const StyledComponen = styled.div<Mods<'size'>>`
+    ${mods.size.small(sizeMixin(12, 16))};
+    ${mods.size.medium(sizeMixin(16, 20))};
+    ${mods.size.large(sizeMixin(20, 24))};
+`;
+```
 
-    ${mods.size.large`
-        font-size: 20px;
-    `};
+### Additional features
+You can use modifiers with `boolean` values and pass them as `string` and as `boolean`:
 
+```ts
+export const StyledComponent = styled.div<Mods<'disabled'>>`
     ${mods.disabled.true`
         color: gray;
-    `}
-
+    `};
+    
+    ${mods('disabled', true)`
+        color: gray;
+    `};
+    
+    ${mods('disabled', 'true')`
+        color: gray;
+    `};
+    
     ${mods.disabled.false`
         color: black;
-    `}
+    `};
+    
+    ${mods('disabled', false)`
+        color: black;
+    `};
+    
+    ${mods('disabled', 'false')`
+        color: black;
+    `};
 `;
 ```
+```tsx
+<StyledComponent disabled />
+```
+---
 
-In this example, we pass several modifier names `'size'` and `'disabled'` to the `Mods` type.
-This allows using all values of both modifiers in a stylized component.
-
-### Sampling limit for modifiers
+You can use modifiers with `number` values:
 
 ```ts
-export const StyledComponent = styled.div<
-    Mods<'size', 'small' | 'large'>> &
-    Mods<'disabled', true> &
-    Mods<'spacing', 12>
->`
+export const StyledComponent = styled.div<Mods<'spacing'>>`
+    ${mods.spacing[12]`
+        padding: 12px;
+    `};
+    
+    ${mods.spacing[24]`
+        padding: 24px;
+    `};
+`;
+```
+```tsx
+<StyledComponent spacing={12} />
+```
+---
+
+You can do any `nesting` of modifiers:
+
+```ts
+export const StyledComponent = styled.div<Mods<'spacing' | 'size'>>`
     ${mods.size.small`
         font-size: 14px;
-    `}
-    
-    ${mods.size.large`
-        font-size: 20px;
-    `}
-    
-    ${mods.disabled.true`
-        color: gray;
-    `}
+    `};
     
     ${mods.spacing[12]`
         padding: 12px;
-    `}
+        
+        ${mods.size.small`
+            font-size: 16px;
+        `};
+    `};
 `;
 ```
+```tsx
+<StyledComponent spacing={12} size='small' />
+```
+---
 
-In this example, we limit the value selection:
-
--   For the `'size'` modifier to only `'small'` and `'large'`,
--   For the modifier `'spacing'` only the value `12`,
--   For the modifier `'disabled'` only the value `true`.
-
-This allows you to apply appropriate styles using only the specified modifier values.
-
-### Using multiple conditions
+You can write `additional logic` for processing modifier values:
 
 ```ts
-export const StyledComponent = styled.div<Mods<'size' | 'disabled'>>`
-    ${mods.disabled.true`
-        color: gray;
-    `}
-
-    ${mods.size.small`
-        font-size: 14px;
-
-        ${mods.disabled.true`
-            color: black;
-        `}
-    `}
+export const StyledComponent = styled.div<{ src: string }>`
+    ${mods('src')(
+        (value) => css`
+            color: ${value.includes('facebook') ? 'blue' : 'orange'};
+        `
+    )};
 `;
 ```
-
-You can apply multiple conditions to display styles.
-Simply nest the modifiers one inside the other.
-
-### Using private modifiers
-
-Sometimes a component needs a private modifier, which should not be put into the general `config'
-for reuse in other components.
-
-#### Method `mods.is`
-
-`mods` has a method `is` that can take names of any modifiers and their values,
-check their consistency in Styled Component properties and apply appropriate styles, if check is successful.
-
-```ts
-export const StyledComponent = styled.div<{ big: boolean; city: 'NY' }>`
-    ${mods.is('big', true)`
-        font-size: 24px;
-    `}
-
-    ${mods.is('big', false)`
-        font-size: 16px;
-    `}
-  
-    ${mods.is('city', 'NY')`
-        border: 4px solid orange;
-    `}
-`;
-```
-
-If the private modifier type is `boolean` and you want to apply styles when it is `true`,
-then in `mods.is` there is no need to specify `true` value, it is applied by default:
-
-```ts
-export const StyledComponent = styled.div<{ big: boolean }>`
-    ${mods.is('big')`
-        font-size: 24px;
-    `}
-`;
-```
-
-#### Method `mods.has`
-
-The `mods` has a method `has` that can take names of any modifiers,
-check their presence in Styled Component properties and apply appropriate styles if they are not `null` or `undefined`.
-
-```ts
-export const StyledComponent = styled.div<{ title?: string }>`
-    display: none;
-
-    ${mods.has('title')`
-        display: block;
-    `}
-`;
+```tsx
+<StyledComponent src='https://www.facebook.com/' />
+<StyledComponent src='https://www.instagram.com/' />
 ```
 
 ## Highlight syntax

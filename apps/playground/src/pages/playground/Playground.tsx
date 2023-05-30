@@ -1,13 +1,12 @@
 import { Button, Root, Wrapper } from './Playground.styles';
 import React, { useState } from 'react';
-import { Heading } from '../../shared/components';
 
 const Playground = () => {
     const [disabled, toggleDisabled] = useState(false);
 
     return (
         <Root>
-            <Heading title="Look at this!">StyledKit library</Heading>
+            <h1>Playground</h1>
 
             <Wrapper
                 $size="large"

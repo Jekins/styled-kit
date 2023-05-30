@@ -3,15 +3,15 @@ import { SCProps } from '@styled-kit/mods';
 import { Mods, mods, RMods } from '../../shared/styled';
 
 export const Button = styled.button<SCProps<{ defaultButton?: boolean }>>`
-    ${mods.is('defaultButton', false)`
+    ${mods.no('defaultButton')`
         background: white;
-        padding: 12px 12px;
+        padding: 12px 20px;
         border: 1px solid #ccc;
-        border-radius: 12px;
+        border-radius: 30px;
         font-size: 16px;
         cursor: pointer;
         transition: 0.3s;
-
+    
         &:hover {
             border-color: black;
         }
@@ -26,8 +26,8 @@ const wrapperColorMixin = (bg: RMods['color'], text: RMods['color']) => css`
 export const Wrapper = styled.div<
     SCProps<Mods<'size' | 'color' | 'disabled'> & Mods<'spacing', 12>>
 >`
-    box-shadow: 0 3px 25px rgba(0, 0, 0, 0.2);
-    border-radius: 12px;
+    box-shadow: rgba(151, 158, 176, 0.2) 0 10px 30px;
+    border-radius: 30px;
     margin-bottom: 16px;
     transition: 0.3s;
 
@@ -52,12 +52,10 @@ export const Wrapper = styled.div<
     `};
 
     ${mods.spacing[12]`
-        padding: 12px;
+        padding: 12px 20px;
     `};
 `;
 
 export const Root = styled.div`
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 16px;
     margin: 32px;
 `;
