@@ -8,7 +8,7 @@ import {
     ModNameFn,
     ModValueFn,
 } from './types';
-import { css } from 'styled-components';
+import { css, Interpolation, ThemedStyledProps } from 'styled-components';
 import { FnMode } from './types/function-mode';
 import { ObjModeFn } from './types/object-mod';
 
@@ -47,7 +47,7 @@ const isValueEqualValueProps = (
  * @param interpolations
  */
 const returnStyles = <
-    L extends Literals<any, any>,
+    L extends Interpolation<ThemedStyledProps<any, any>>,
     I extends Interpolations<any, any>
 >(
     literals?: L,

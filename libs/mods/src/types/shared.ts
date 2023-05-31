@@ -40,7 +40,6 @@ export type Literals<
 > =
     | TemplateStringsArray
     | CSSObject
-    | InterpolationFunction<ThemedStyledProps<Props, Theme>>
     | FlattenInterpolation<Props>
     | Interpolations<Props, Theme>;
 
@@ -50,7 +49,7 @@ export type Literals<
 export type Interpolations<
     Props extends ComponentProps,
     Theme extends ComponentProps
-> = Interpolation<ThemedStyledProps<Props, Theme>>;
+> = ReadonlyArray<Interpolation<ThemedStyledProps<Props, Theme>>>;
 
 /**
  * Call Literals as a function
@@ -62,4 +61,7 @@ export type FnLiterals<
         | undefined,
     Props extends ComponentProps,
     Theme extends ComponentProps
-> = (value: ModValue, props: Props) => Literals<Props, Theme>;
+> = (
+    value: ModValue,
+    props: Props
+) => Interpolation<ThemedStyledProps<Props, Theme>>;
