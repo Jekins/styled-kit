@@ -36,7 +36,10 @@ export type ModValueFn = ModifierValue | ReadonlyArray<ModifierValue>;
 export type Literals<Props extends ComponentProps> =
     | TemplateStringsArray
     | CSSObject
-    | FlattenInterpolation<Props>;
+    | FlattenInterpolation<Props>
+    | false
+    | number
+    | string;
 
 /**
  * Type of interpolations from styled components
