@@ -1,13 +1,16 @@
 import {
     ComponentProps,
-    FnProps,
     ModifierValue,
     FnLiterals,
-    Interpolations,
     Literals,
     ModNameFn,
     ModValueFn,
 } from './shared';
+import {
+    Interpolation,
+    InterpolationFunction,
+    ThemedStyledProps,
+} from 'styled-components';
 
 export type ModValueFromFn<ModValue extends ModValueFn | undefined> =
     ModValue extends ReadonlyArray<ModifierValue> ? ModValue[number] : ModValue;
@@ -50,7 +53,7 @@ type FnLiteralsNotModValue<
     Props extends ComponentProps
 > = ModName extends string
     ? ModValue extends undefined
-        ? undefined
+        ? never
         : Exclude<ModValueFromProps<ModName, Props>, ModValueFromFn<ModValue>>
     : ModValue extends ModifierValue
     ? {
@@ -61,7 +64,7 @@ type FnLiteralsNotModValue<
       }
     : {
           [Key in ModName[number]]: ModValue extends undefined
-              ? undefined
+              ? never
               : ModValueFromProps<Key, Props>;
       };
 
@@ -71,7 +74,7 @@ export type FnModeReturn<
     Not extends boolean
 > = <Props extends ComponentProps, Theme extends ComponentProps>(
     fn:
-        | Literals<Props>
+        | Literals<Props, Theme>
         | FnLiterals<
               Not extends true
                   ? FnLiteralsNotModValue<ModName, ModValue, Props>
@@ -79,8 +82,8 @@ export type FnModeReturn<
               Props,
               Theme
           >,
-    ...interpolations: Interpolations<Props, Theme>
-) => FnProps<Props, Theme>;
+    ...interpolations: Array<Interpolation<ThemedStyledProps<Props, Theme>>>
+) => InterpolationFunction<Props>;
 
 /**
  * Type mode for mods('color', 'blue') and etc

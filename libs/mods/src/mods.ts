@@ -47,13 +47,13 @@ const isValueEqualValueProps = (
  * @param interpolations
  */
 const returnStyles = <
-    L extends Literals<any>,
+    L extends Literals<any, any>,
     I extends Interpolations<any, any>
 >(
-    literals: L,
-    interpolations: I
+    literals?: L,
+    interpolations?: I
 ) => {
-    if (interpolations.length) {
+    if (Array.isArray(interpolations) && interpolations.length) {
         return css(literals as TemplateStringsArray, ...interpolations);
     }
 
@@ -71,7 +71,7 @@ export const getObjMode =
     <ModName extends keyof any, ModValue extends ModifierValue | undefined>(
         name: ModName,
         value?: ModValue
-    ): ObjModeFn<ModValue> => {
+    ): ObjModeFn<ModName, ModValue> => {
         return (literalsAndFnLiterals, ...interpolations) => {
             return (props) => {
                 const modValueFromProps = getValueFromProps(name, props);

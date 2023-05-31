@@ -1,27 +1,36 @@
 import {
     ComponentProps,
-    FnProps,
     ModsConfigStructure,
     ModifierValue,
     FnLiterals,
-    Interpolations,
     Literals,
 } from './shared';
+import {
+    Interpolation,
+    InterpolationFunction,
+    ThemedStyledProps,
+} from 'styled-components';
 
-export type ObjModeFn<ModValue extends ModifierValue | undefined> = <
-    Props extends ComponentProps,
-    Theme extends ComponentProps
->(
+export type ModValueFromProps<
+    ModName extends keyof any,
+    Props extends ComponentProps
+> = ModName extends string
+    ? Required<Props>[ModName] & Required<Props>[`$${ModName}`]
+    : never;
+
+export type ObjModeFn<
+    ModeName extends keyof any,
+    ModValue extends ModifierValue | undefined
+> = <Props extends ComponentProps, Theme extends ComponentProps>(
     fn:
-        | Literals<Props>
+        | Literals<Props, Theme>
         | FnLiterals<
-              // Extract<valueFromProps<ModeName, Props>, ModValue>,
-              ModValue,
+              Extract<ModValueFromProps<ModeName, Props>, ModValue>,
               Props,
               Theme
           >,
-    ...interpolations: Interpolations<Props, Theme>
-) => FnProps<Props, Theme>;
+    ...interpolations: Array<Interpolation<ThemedStyledProps<Props, Theme>>>
+) => InterpolationFunction<Props>;
 
 export type ObjModeChildren<
     Mods extends ModsConfigStructure,
@@ -30,11 +39,13 @@ export type ObjModeChildren<
 > = Mods[ModName][number] extends boolean
     ? {
           [Key in boolean as `${Key}`]: ObjModeFn<
+              ModName,
               Not extends true ? Exclude<Mods[ModName][number], Key> : Key
           >;
       }
     : {
           [Key in Exclude<Mods[ModName][number], boolean>]: ObjModeFn<
+              ModName,
               Not extends true ? Exclude<Mods[ModName][number], Key> : Key
           >;
       };
@@ -47,4 +58,4 @@ export type ObjMode<
     ModName extends keyof Mods,
     Not extends boolean
 > = ObjModeChildren<Mods, ModName, Not> &
-    ObjModeFn<Not extends true ? undefined : Mods[ModName][number]>;
+    ObjModeFn<ModName, Not extends true ? undefined : Mods[ModName][number]>;

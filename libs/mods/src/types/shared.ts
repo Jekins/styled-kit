@@ -2,6 +2,7 @@ import {
     CSSObject,
     FlattenInterpolation,
     Interpolation,
+    InterpolationFunction,
     ThemedStyledProps,
 } from 'styled-components';
 
@@ -33,13 +34,15 @@ export type ModValueFn = ModifierValue | ReadonlyArray<ModifierValue>;
 /**
  * Type of literals from styled components
  */
-export type Literals<Props extends ComponentProps> =
+export type Literals<
+    Props extends ComponentProps,
+    Theme extends ComponentProps
+> =
     | TemplateStringsArray
     | CSSObject
+    | InterpolationFunction<ThemedStyledProps<Props, Theme>>
     | FlattenInterpolation<Props>
-    | false
-    | number
-    | string;
+    | Interpolations<Props, Theme>;
 
 /**
  * Type of interpolations from styled components
@@ -47,15 +50,7 @@ export type Literals<Props extends ComponentProps> =
 export type Interpolations<
     Props extends ComponentProps,
     Theme extends ComponentProps
-> = ReadonlyArray<Interpolation<ThemedStyledProps<Props, Theme>>>;
-
-/**
- * Props function from styled components
- */
-export type FnProps<
-    Props extends ComponentProps,
-    Theme extends ComponentProps
-> = (props: Props) => Interpolations<Props, Theme>;
+> = Interpolation<ThemedStyledProps<Props, Theme>>;
 
 /**
  * Call Literals as a function
@@ -67,4 +62,4 @@ export type FnLiterals<
         | undefined,
     Props extends ComponentProps,
     Theme extends ComponentProps
-> = (value: ModValue, props: Props) => Interpolations<Props, Theme>;
+> = (value: ModValue, props: Props) => Literals<Props, Theme>;
