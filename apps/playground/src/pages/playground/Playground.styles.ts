@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components';
-import { SCProps } from '@styled-kit/mods';
+import { StyledMods } from '@styled-kit/mods';
 import { Mods, mods, RMods } from '../../shared/styled';
 
-export const Button = styled.button<SCProps<{ defaultButton?: boolean }>>`
+export const Button = styled.button<StyledMods<{ defaultButton?: boolean }>>`
     ${mods.not('defaultButton')`
         background: white;
         padding: 12px 20px;
@@ -24,7 +24,7 @@ const wrapperColorMixin = (bg: RMods['color'], text: RMods['color']) => css`
 `;
 
 export const Wrapper = styled.div<
-    SCProps<Mods<'size' | 'color' | 'disabled'> & Mods<'spacing', 12>>
+    StyledMods<Mods<'size' | 'color' | 'disabled'> & Mods<'spacing', 12>>
 >`
     box-shadow: rgba(151, 158, 176, 0.2) 0 10px 30px;
     border-radius: 30px;

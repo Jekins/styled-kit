@@ -1,6 +1,7 @@
 import { ObjMode } from './object-mod';
 import { FnMode } from './function-mode';
 import { ModsConfigStructure } from './shared';
+import { StyledProps } from 'styled-components';
 
 export * from './shared';
 
@@ -45,11 +46,11 @@ export type Modifiers<
 };
 
 /**
- * The SCProps type will allow you to write Styled Component property types without the $ prefix,
+ * The StyledMods type will allow you to write Styled Component property types without the $ prefix,
  * but still have valid typing.
  * Internally, it prefixes all types passed to it with $.
  * to all the types passed to it.
  */
-export type SCProps<T> = {
+export type StyledMods<T> = StyledProps<{
     [K in keyof T as `$${string & K}`]: T[K];
-};
+}>;

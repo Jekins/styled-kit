@@ -189,7 +189,7 @@ export type { Mods } from './types';
 -   [Usage types](#usage-types)
     -   [Type `Mods`](#type-mods)
     -   [Type `RMods`](#type-rmods)
-    -   [Type `SCProps`](#type-scprops)
+    -   [Type `StyledMods`](#type-scprops)
 -   [Usage modifiers](#usage-modifiers)
     -   [Using in Object mode](#using-in-object-mode)
     -   [Using in Function mode](#using-in-function-mode)
@@ -373,7 +373,7 @@ interface ComponentProps extends RMods<'size'> {}
 // }
 ```
 
-### Type `SCProps`
+### Type `StyledMods`
 
 Since version 16 of
 React [all specified attributes remain on DOM elements](https://legacy.reactjs.org/blog/2017/09/08/dom-attributes-in-react-16.html)
@@ -383,11 +383,11 @@ you will see a `Warning' in the developer console in the browser.
 To avoid these warnings, [Styled Components recommends](https://styled-components.com/docs/api#transient-props]) use
 prefix `$` in front of properties that should not be included in the DOM element.
 
-The `SCProps` type will allow you to write Styled Component property types without the `$` prefix,
+The `StyledMods` type will allow you to write Styled Component property types without the `$` prefix,
 but still have valid typing. Internally, it prefixes all types passed to it with `$`.
 to all the types passed to it.
 
-_Without the `SCProps` type:_
+_Without the `StyledMods` type:_
 
 ```ts
 export const StyledComponent = styled.div<Mods<'size'> & { padding: string }>`
@@ -405,13 +405,13 @@ export const StyledComponent = styled.div<Mods<'size'> & { padding: string }>`
 
 ---
 
-_With the `SCProps` type:_
+_With the `StyledMods` type:_
 
 ```ts
-import { SCProps } from '@styled-kit/mods';
+import { StyledMods } from '@styled-kit/mods';
 
 export const StyledComponent = styled.div<
-    SCProps<Mods<'size'> & { padding: string }>
+    StyledMods<Mods<'size'> & { padding: string }>
 >`
     ${mods.size.small`
         font-size: 14px;

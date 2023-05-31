@@ -1,11 +1,11 @@
 import styled, { css } from 'styled-components';
-import { SCProps } from '@styled-kit/mods';
+import { StyledMods } from '@styled-kit/mods';
 import { mods, Mods } from '../../shared/styled';
 
 /*
  * Obj mode
  */
-export const ModsColor = styled.div<SCProps<Mods<'color'>>>`
+export const ModsColor = styled.div<StyledMods<Mods<'color'>>>`
     ${mods.color`
         color: white;
     `};
@@ -18,7 +18,7 @@ export const ModsColor = styled.div<SCProps<Mods<'color'>>>`
     )};
 `;
 
-export const ModsNotColor = styled.div<SCProps<Mods<'color'>>>`
+export const ModsNotColor = styled.div<StyledMods<Mods<'color'>>>`
     ${mods.not.color`
         color: white;
     `};
@@ -30,7 +30,7 @@ export const ModsNotColor = styled.div<SCProps<Mods<'color'>>>`
     )};
 `;
 
-export const ModsColorBlue = styled.div<SCProps<Mods<'color'>>>`
+export const ModsColorBlue = styled.div<StyledMods<Mods<'color'>>>`
     ${mods.color.blue`
         color: white;
     `};
@@ -42,7 +42,7 @@ export const ModsColorBlue = styled.div<SCProps<Mods<'color'>>>`
     )};
 `;
 
-export const ModsNotColorBlue = styled.div<SCProps<Mods<'color'>>>`
+export const ModsNotColorBlue = styled.div<StyledMods<Mods<'color'>>>`
     ${mods.not.color.blue`
         color: white;
     `};
@@ -60,7 +60,7 @@ export const ModsNotColorBlue = styled.div<SCProps<Mods<'color'>>>`
 
 /* Mod name is not array */
 
-export const FnModsColor = styled.div<SCProps<Mods<'color'>>>`
+export const FnModsColor = styled.div<StyledMods<Mods<'color'>>>`
     ${mods('color')`
         color: white;
     `};
@@ -72,7 +72,7 @@ export const FnModsColor = styled.div<SCProps<Mods<'color'>>>`
     )};
 `;
 
-export const FnModsNotColor = styled.div<SCProps<Mods<'color'>>>`
+export const FnModsNotColor = styled.div<StyledMods<Mods<'color'>>>`
     ${mods.not('color')`
         color: white;
     `};
@@ -84,7 +84,7 @@ export const FnModsNotColor = styled.div<SCProps<Mods<'color'>>>`
     )};
 `;
 
-export const FnModsColorBlue = styled.div<SCProps<Mods<'color'>>>`
+export const FnModsColorBlue = styled.div<StyledMods<Mods<'color'>>>`
     ${mods('color', 'blue')`
         color: white;
     `};
@@ -99,7 +99,7 @@ export const FnModsColorBlue = styled.div<SCProps<Mods<'color'>>>`
     )};
 `;
 
-export const FnModsNotColorBlue = styled.div<SCProps<Mods<'color'>>>`
+export const FnModsNotColorBlue = styled.div<StyledMods<Mods<'color'>>>`
     ${mods.not('color', 'blue')`
         color: white;
     `};
@@ -114,7 +114,7 @@ export const FnModsNotColorBlue = styled.div<SCProps<Mods<'color'>>>`
     )};
 `;
 
-export const FnModsColorBlueBlack = styled.div<SCProps<Mods<'color'>>>`
+export const FnModsColorBlueBlack = styled.div<StyledMods<Mods<'color'>>>`
     ${mods('color', ['blue', 'black'])`
         color: white;
     `};
@@ -126,7 +126,7 @@ export const FnModsColorBlueBlack = styled.div<SCProps<Mods<'color'>>>`
     )};
 `;
 
-export const FnModsNotColorBlueBlack = styled.div<SCProps<Mods<'color'>>>`
+export const FnModsNotColorBlueBlack = styled.div<StyledMods<Mods<'color'>>>`
     ${mods.not('color', ['blue', 'black'])`
         color: white;
     `};
@@ -140,7 +140,7 @@ export const FnModsNotColorBlueBlack = styled.div<SCProps<Mods<'color'>>>`
 
 /* Mod name is array */
 
-export const FnModsColorBg = styled.div<SCProps<Mods<'color' | 'bg'>>>`
+export const FnModsColorBg = styled.div<StyledMods<Mods<'color' | 'bg'>>>`
     ${mods(['color', 'bg'])`
         color: white;
     `};
@@ -154,7 +154,7 @@ export const FnModsColorBg = styled.div<SCProps<Mods<'color' | 'bg'>>>`
     )};
 `;
 
-export const FnModsNotColorBg = styled.div<SCProps<Mods<'color' | 'bg'>>>`
+export const FnModsNotColorBg = styled.div<StyledMods<Mods<'color' | 'bg'>>>`
     ${mods.not(['color', 'bg'])`
         color: white;
     `};
@@ -168,7 +168,7 @@ export const FnModsNotColorBg = styled.div<SCProps<Mods<'color' | 'bg'>>>`
     )};
 `;
 
-export const FnModsColorBgBlue = styled.div<SCProps<Mods<'color' | 'bg'>>>`
+export const FnModsColorBgBlue = styled.div<StyledMods<Mods<'color' | 'bg'>>>`
     ${mods(['color', 'bg'], 'blue')`
         color: white;
     `};
@@ -183,7 +183,9 @@ export const FnModsColorBgBlue = styled.div<SCProps<Mods<'color' | 'bg'>>>`
     )};
 `;
 
-export const FnModsNotColorBgBlue = styled.div<SCProps<Mods<'color' | 'bg'>>>`
+export const FnModsNotColorBgBlue = styled.div<
+    StyledMods<Mods<'color' | 'bg'>>
+>`
     ${mods.not(['color', 'bg'], 'blue')`
         color: white;
     `};
@@ -200,7 +202,9 @@ export const FnModsNotColorBgBlue = styled.div<SCProps<Mods<'color' | 'bg'>>>`
     )};
 `;
 
-export const FnModsColorBgBlueGreen = styled.div<SCProps<Mods<'color' | 'bg'>>>`
+export const FnModsColorBgBlueGreen = styled.div<
+    StyledMods<Mods<'color' | 'bg'>>
+>`
     ${mods(['color', 'bg'], ['blue', 'green'])`
         color: white;
     `};
@@ -218,7 +222,7 @@ export const FnModsColorBgBlueGreen = styled.div<SCProps<Mods<'color' | 'bg'>>>`
 `;
 
 export const FnModsNotColorBgBlueGreen = styled.div<
-    SCProps<Mods<'color' | 'bg'>>
+    StyledMods<Mods<'color' | 'bg'>>
 >`
     ${mods.not(['color', 'bg'], ['blue', 'green'])`
         color: white;
