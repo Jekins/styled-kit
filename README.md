@@ -15,5 +15,11 @@ export const StyledComponent = styled.div<Mod<'size'>>`
     ${mods.size.small`
         font-size: 14px;
     `};
+    
+    ${mods('size', 'small')`
+        font-size: 14px;
+    `};
 `;
 ```
+
+And many other options.

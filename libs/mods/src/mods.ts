@@ -64,10 +64,10 @@ const returnStyles = <
 
 /**
  * A method for object mode to get styles by modifiers
- * @param no
+ * @param not
  */
 export const getObjMode =
-    (no?: boolean) =>
+    (not?: boolean) =>
     <ModName extends keyof any, ModValue extends ModifierValue | undefined>(
         name: ModName,
         value?: ModValue
@@ -79,12 +79,12 @@ export const getObjMode =
 
                 /**
                  * For `mods.color.blue`
-                 * For `mods.no.color.blue`
+                 * For `mods.not.color.blue`
                  * For `mods.color`
-                 * For `mods.no.color`
+                 * For `mods.not.color`
                  */
                 if (
-                    value !== undefined || !no
+                    value !== undefined || !not
                         ? isModUndefined
                         : !isModUndefined
                 ) {
@@ -94,14 +94,14 @@ export const getObjMode =
                 if (value !== undefined) {
                     /**
                      * For `mods.color.blue`
-                     * For `mods.no.color.blue`
+                     * For `mods.not.color.blue`
                      */
                     const isValuesEqual = isValueEqualValueProps(
                         value,
                         modValueFromProps
                     );
 
-                    if (no ? isValuesEqual : !isValuesEqual) {
+                    if (not ? isValuesEqual : !isValuesEqual) {
                         return css``;
                     }
                 }
@@ -118,10 +118,10 @@ export const getObjMode =
 
 /**
  * A method for function mode to get styles by modifiers
- * @param no
+ * @param not
  */
 export const getFnMode =
-    (no?: boolean): FnMode<false> =>
+    (not?: boolean): FnMode<false> =>
     (name, value) => {
         return (literalsAndFnLiterals, ...interpolations) => {
             return (props) => {
@@ -145,9 +145,9 @@ export const getFnMode =
                     modValueFromProps
                 ).some((targetModValue) => targetModValue === undefined);
 
-                if (no && names.length > 1 && values.length === 1) {
+                if (not && names.length > 1 && values.length === 1) {
                     /*
-                     * For mods.no(['color', 'bg'], 'blue')
+                     * For mods.not(['color', 'bg'], 'blue')
                      */
                     const isSomeValueEqualSomePropsValue = values.some(
                         (targetValue) => {
@@ -170,9 +170,9 @@ export const getFnMode =
                      * For mods(['color', 'bg'], 'blue')
                      * For mods(['color', 'bg'], ['blue', 'black'])
                      * and
-                     * For mods.no('color', 'bg')
-                     * For mods.no('color', ['blue', 'black'])
-                     * For mods.no(['color', 'bg'], ['blue', 'black'])
+                     * For mods.not('color', 'bg')
+                     * For mods.not('color', ['blue', 'black'])
+                     * For mods.not(['color', 'bg'], ['blue', 'black'])
                      */
                     const isSomeValueEqualEveryPropsValue = values.some(
                         (targetValue) => {
@@ -188,7 +188,7 @@ export const getFnMode =
                     );
 
                     if (
-                        no
+                        not
                             ? isSomeValueEqualEveryPropsValue
                             : !isSomeValueEqualEveryPropsValue
                     ) {
@@ -197,9 +197,9 @@ export const getFnMode =
                 }
 
                 /**
-                 * For mods.no(['color', 'bg'])
+                 * For mods.not(['color', 'bg'])
                  */
-                if (no && name.length > 1 && !values.length) {
+                if (not && name.length > 1 && !values.length) {
                     const isEveryModUndefined = Object.values(
                         modValueFromProps
                     ).every((targetModValue) => targetModValue === undefined);
@@ -215,13 +215,13 @@ export const getFnMode =
                  * For mods('color')
                  * For mods(['color', 'bg'])
                  * and
-                 * For mods.no('color', 'bg')
-                 * For mods.no('color', ['blue', 'black'])
-                 * For mods.no(['color', 'bg'], 'blue')
-                 * For mods.no(['color', 'bg'], ['blue', 'black'])
+                 * For mods.not('color', 'bg')
+                 * For mods.not('color', ['blue', 'black'])
+                 * For mods.not(['color', 'bg'], 'blue')
+                 * For mods.not(['color', 'bg'], ['blue', 'black'])
                  */
                 if (
-                    values.length || !no
+                    values.length || !not
                         ? isSomeModUndefined
                         : !isSomeModUndefined
                 ) {
@@ -231,7 +231,7 @@ export const getFnMode =
                 const literals =
                     typeof literalsAndFnLiterals === 'function'
                         ? literalsAndFnLiterals(
-                              names.length > 1 && (no || values.length !== 1)
+                              names.length > 1 && (not || values.length !== 1)
                                   ? modValueFromProps
                                   : modValueFromProps[names[0]],
                               props
@@ -247,23 +247,23 @@ export const getFnMode =
  * Creating a modifier structure for an object mode
  * @param name
  * @param values
- * @param no
+ * @param not
  */
 const createModsObject = <Mods extends ModsConfigStructure>(
     name: keyof Mods,
     values: ReadonlyArray<ModifierValue>,
-    no?: boolean
+    not?: boolean
 ) => {
     const valuesObject = values.reduce((acc, value) => {
         const preparedValue = typeof value === 'number' ? value : String(value);
 
         return {
             ...acc,
-            [preparedValue]: getObjMode(no)(name, value),
+            [preparedValue]: getObjMode(not)(name, value),
         };
     }, {});
 
-    return Object.assign(getObjMode(no)(name), valuesObject);
+    return Object.assign(getObjMode(not)(name), valuesObject);
 };
 
 /**
@@ -287,6 +287,6 @@ export const initMods = <Mods extends ModsConfigStructure>(
     const objModeNo = Object.fromEntries(structureForObjModeWithNo);
 
     return Object.assign(getFnMode(false), objMode, {
-        no: Object.assign(getFnMode(true), objModeNo),
+        not: Object.assign(getFnMode(true), objModeNo),
     });
 };

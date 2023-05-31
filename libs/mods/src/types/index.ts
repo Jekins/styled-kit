@@ -9,21 +9,21 @@ export * from './shared';
  */
 export type ModsStructure<
     Mods extends ModsConfigStructure,
-    No extends boolean
+    Not extends boolean
 > = {
     [ModName in keyof Mods]: ObjMode<
         Mods,
         ModName extends string ? ModName : never,
-        No
+        Not
     >;
-} & FnMode<No>;
+} & FnMode<Not>;
 
 /**
  * Type of method for initializing modifiers relative to config
  */
 export type InitMods<Mods extends ModsConfigStructure> =
     | ModsStructure<Mods, false> & {
-          no: ModsStructure<Mods, true>;
+          not: ModsStructure<Mods, true>;
       };
 
 /**

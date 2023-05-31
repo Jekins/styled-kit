@@ -3,22 +3,22 @@ import {
     Root,
     ModsColorBlue,
     ModsColor,
-    ModsNoColor,
-    ModsNoColorBlue,
+    ModsNotColor,
+    ModsNotColorBlue,
     FnModsColor,
     FnModsColorBg,
-    FnModsNoColorBg,
+    FnModsNotColorBg,
     Group,
-    FnModsNoColor,
+    FnModsNotColor,
     FnModsColorBlue,
-    FnModsNoColorBlue,
+    FnModsNotColorBlue,
     FnModsColorBgBlue,
-    FnModsNoColorBgBlue,
+    FnModsNotColorBgBlue,
     Wrong,
     FnModsColorBgBlueGreen,
-    FnModsNoColorBgBlueGreen,
+    FnModsNotColorBgBlueGreen,
     FnModsColorBlueBlack,
-    FnModsNoColorBlueBlack,
+    FnModsNotColorBlueBlack,
 } from './Checker.styles';
 
 const Checker = memo(() => {
@@ -53,18 +53,18 @@ const Checker = memo(() => {
             </Group>
 
             <Group>
-                <ModsNoColor>
+                <ModsNotColor>
                     <h4>Color is undefined</h4>
-                    <p>mods.no.color``</p>
-                    <p>mods.no.color()</p>
-                </ModsNoColor>
+                    <p>mods.not.color``</p>
+                    <p>mods.not.color()</p>
+                </ModsNotColor>
 
                 <Wrong>
-                    <ModsNoColor color="blue">
+                    <ModsNotColor color="blue">
                         <h4>Color is undefined</h4>
                         <p>Props:</p>
                         <p>$color="blue"</p>
-                    </ModsNoColor>
+                    </ModsNotColor>
                 </Wrong>
             </Group>
 
@@ -93,24 +93,24 @@ const Checker = memo(() => {
             </Group>
 
             <Group>
-                <ModsNoColorBlue $color="black">
+                <ModsNotColorBlue $color="black">
                     <h4>Color is not blue and not undefined</h4>
-                    <p>mods.no.color.blue``</p>
-                    <p>mods.no.color.blue()</p>
-                </ModsNoColorBlue>
+                    <p>mods.not.color.blue``</p>
+                    <p>mods.not.color.blue()</p>
+                </ModsNotColorBlue>
 
                 <Wrong>
-                    <ModsNoColorBlue $color="blue">
+                    <ModsNotColorBlue $color="blue">
                         <h4>Color is not blue and not undefined</h4>
                         <p>Props:</p>
                         <p>$color="blue"</p>
-                    </ModsNoColorBlue>
+                    </ModsNotColorBlue>
 
-                    <ModsNoColorBlue>
+                    <ModsNotColorBlue>
                         <h4>Color is not blue and not undefined</h4>
                         <p>Props:</p>
                         <p>undefined</p>
-                    </ModsNoColorBlue>
+                    </ModsNotColorBlue>
                 </Wrong>
             </Group>
 
@@ -137,18 +137,18 @@ const Checker = memo(() => {
             </Group>
 
             <Group>
-                <FnModsNoColor>
+                <FnModsNotColor>
                     <h4>Color is undefined</h4>
-                    <p>mods.no('color')``</p>
-                    <p>mods.no('color')()</p>
-                </FnModsNoColor>
+                    <p>mods.not('color')``</p>
+                    <p>mods.not('color')()</p>
+                </FnModsNotColor>
 
                 <Wrong>
-                    <FnModsNoColor $color="blue">
+                    <FnModsNotColor $color="blue">
                         <h4>Color is undefined</h4>
                         <p>Props:</p>
                         <p>$color="blue"</p>
-                    </FnModsNoColor>
+                    </FnModsNotColor>
                 </Wrong>
             </Group>
 
@@ -177,24 +177,24 @@ const Checker = memo(() => {
             </Group>
 
             <Group>
-                <FnModsNoColorBlue $color="black">
+                <FnModsNotColorBlue $color="black">
                     <h4>Color is not blue and not undefined</h4>
-                    <p>mods.no('color', 'blue')``</p>
-                    <p>mods.no('color', 'blue')()</p>
-                </FnModsNoColorBlue>
+                    <p>mods.not('color', 'blue')``</p>
+                    <p>mods.not('color', 'blue')()</p>
+                </FnModsNotColorBlue>
 
                 <Wrong>
-                    <FnModsNoColorBlue $color="blue">
+                    <FnModsNotColorBlue $color="blue">
                         <h4>Color is not blue and not undefined</h4>
                         <p>Props:</p>
                         <p>$color="blue"</p>
-                    </FnModsNoColorBlue>
+                    </FnModsNotColorBlue>
 
-                    <FnModsNoColorBlue>
+                    <FnModsNotColorBlue>
                         <h4>Color is not blue and not undefined</h4>
                         <p>Props:</p>
                         <p>undefined</p>
-                    </FnModsNoColorBlue>
+                    </FnModsNotColorBlue>
                 </Wrong>
             </Group>
 
@@ -223,24 +223,24 @@ const Checker = memo(() => {
             </Group>
 
             <Group>
-                <FnModsNoColorBlueBlack $color="white">
+                <FnModsNotColorBlueBlack $color="white">
                     <h4>Color is not blue or black and not undefined</h4>
-                    <p>mods.no('color', ['blue', 'black'])``</p>
-                    <p>mods.no('color', ['blue', 'black'])()</p>
-                </FnModsNoColorBlueBlack>
+                    <p>mods.not('color', ['blue', 'black'])``</p>
+                    <p>mods.not('color', ['blue', 'black'])()</p>
+                </FnModsNotColorBlueBlack>
 
                 <Wrong>
-                    <FnModsNoColorBlueBlack $color="blue">
+                    <FnModsNotColorBlueBlack $color="blue">
                         <h4>Color is not blue or black and not undefined</h4>
                         <p>Props:</p>
                         <p>$color="blue"</p>
-                    </FnModsNoColorBlueBlack>
+                    </FnModsNotColorBlueBlack>
 
-                    <FnModsNoColorBlueBlack>
+                    <FnModsNotColorBlueBlack>
                         <h4>Color is not blue or black and not undefined</h4>
                         <p>Props:</p>
                         <p>undefined</p>
-                    </FnModsNoColorBlueBlack>
+                    </FnModsNotColorBlueBlack>
                 </Wrong>
             </Group>
 
@@ -271,24 +271,24 @@ const Checker = memo(() => {
             </Group>
 
             <Group>
-                <FnModsNoColorBg>
+                <FnModsNotColorBg>
                     <h4>Color and bg and both is undefined</h4>
-                    <p>mods.no(['color', 'bg'])``</p>
-                    <p>mods.no(['color', 'bg'])()</p>
-                </FnModsNoColorBg>
+                    <p>mods.not(['color', 'bg'])``</p>
+                    <p>mods.not(['color', 'bg'])()</p>
+                </FnModsNotColorBg>
 
                 <Wrong>
-                    <FnModsNoColorBg $color="blue" $bg="black">
+                    <FnModsNotColorBg $color="blue" $bg="black">
                         <h4>Color and bg and both is undefined</h4>
                         <p>Props:</p>
                         <p>$color="blue" $bg="black"</p>
-                    </FnModsNoColorBg>
+                    </FnModsNotColorBg>
 
-                    <FnModsNoColorBg $color="blue">
+                    <FnModsNotColorBg $color="blue">
                         <h4>Color and bg and both is undefined</h4>
                         <p>Props:</p>
                         <p>$color="blue" $bg=undefined</p>
-                    </FnModsNoColorBg>
+                    </FnModsNotColorBg>
                 </Wrong>
             </Group>
 
@@ -297,8 +297,8 @@ const Checker = memo(() => {
             <Group>
                 <FnModsColorBgBlue $color="blue" $bg="blue">
                     <h4>Color and bg is blue and is not undefined</h4>
-                    <p>mods.no(['color', 'bg'], 'blue')``</p>
-                    <p>mods.no(['color', 'bg'], 'blue')()</p>
+                    <p>mods.not(['color', 'bg'], 'blue')``</p>
+                    <p>mods.not(['color', 'bg'], 'blue')()</p>
                 </FnModsColorBgBlue>
 
                 <Wrong>
@@ -323,36 +323,36 @@ const Checker = memo(() => {
             </Group>
 
             <Group>
-                <FnModsNoColorBgBlue $color="black" $bg="green">
+                <FnModsNotColorBgBlue $color="black" $bg="green">
                     <h4>Color and bg is not blue and not undefined</h4>
-                    <p>mods.no(['color', 'bg'], 'blue')``</p>
-                    <p>mods.no(['color', 'bg'], 'blue')()</p>
-                </FnModsNoColorBgBlue>
+                    <p>mods.not(['color', 'bg'], 'blue')``</p>
+                    <p>mods.not(['color', 'bg'], 'blue')()</p>
+                </FnModsNotColorBgBlue>
 
                 <Wrong>
-                    <FnModsNoColorBgBlue $color="blue" $bg="blue">
+                    <FnModsNotColorBgBlue $color="blue" $bg="blue">
                         <h4>Color and bg is not blue and not undefined</h4>
                         <p>Props:</p>
                         <p>$color="blue" $bg="blue"</p>
-                    </FnModsNoColorBgBlue>
+                    </FnModsNotColorBgBlue>
 
-                    <FnModsNoColorBgBlue $color="blue" $bg="green">
+                    <FnModsNotColorBgBlue $color="blue" $bg="green">
                         <h4>Color and bg is not blue and not undefined</h4>
                         <p>Props:</p>
                         <p>$color="blue" $bg="green"</p>
-                    </FnModsNoColorBgBlue>
+                    </FnModsNotColorBgBlue>
 
-                    <FnModsNoColorBgBlue $bg="green">
+                    <FnModsNotColorBgBlue $bg="green">
                         <h4>Color and bg is not blue and not undefined</h4>
                         <p>Props:</p>
                         <p>$color=undefined $bg="green"</p>
-                    </FnModsNoColorBgBlue>
+                    </FnModsNotColorBgBlue>
 
-                    <FnModsNoColorBgBlue>
+                    <FnModsNotColorBgBlue>
                         <h4>Color and bg is not blue and not undefined</h4>
                         <p>Props:</p>
                         <p>$color=undefined $bg=undefined</p>
-                    </FnModsNoColorBgBlue>
+                    </FnModsNotColorBgBlue>
                 </Wrong>
             </Group>
 
@@ -407,51 +407,51 @@ const Checker = memo(() => {
             </Group>
 
             <Group>
-                <FnModsNoColorBgBlueGreen $color="blue" $bg="green">
+                <FnModsNotColorBgBlueGreen $color="blue" $bg="green">
                     <h4>
                         Color and bg together is not blue or green and not
                         undefined
                     </h4>
-                    <p>mods.no(['color', 'bg'], ['blue', 'green'])``</p>
-                    <p>mods.no(['color', 'bg'], ['blue', 'green'])()</p>
-                </FnModsNoColorBgBlueGreen>
+                    <p>mods.not(['color', 'bg'], ['blue', 'green'])``</p>
+                    <p>mods.not(['color', 'bg'], ['blue', 'green'])()</p>
+                </FnModsNotColorBgBlueGreen>
 
                 <Wrong>
-                    <FnModsNoColorBgBlueGreen $color="blue" $bg="blue">
+                    <FnModsNotColorBgBlueGreen $color="blue" $bg="blue">
                         <h4>
                             Color and bg together is not blue or green and not
                             undefined
                         </h4>
                         <p>Props:</p>
                         <p>$color="blue" $bg="blue"</p>
-                    </FnModsNoColorBgBlueGreen>
+                    </FnModsNotColorBgBlueGreen>
 
-                    <FnModsNoColorBgBlueGreen $color="blue">
+                    <FnModsNotColorBgBlueGreen $color="blue">
                         <h4>
                             Color and bg together is not blue or green and not
                             undefined
                         </h4>
                         <p>Props:</p>
                         <p>$color="blue" $bg=undefined</p>
-                    </FnModsNoColorBgBlueGreen>
+                    </FnModsNotColorBgBlueGreen>
 
-                    <FnModsNoColorBgBlueGreen $bg="black">
+                    <FnModsNotColorBgBlueGreen $bg="black">
                         <h4>
                             Color and bg together is not blue or green and not
                             undefined
                         </h4>
                         <p>Props:</p>
                         <p>$color=undefined $bg="black"</p>
-                    </FnModsNoColorBgBlueGreen>
+                    </FnModsNotColorBgBlueGreen>
 
-                    <FnModsNoColorBgBlueGreen>
+                    <FnModsNotColorBgBlueGreen>
                         <h4>
                             Color and bg together is not blue or green and not
                             undefined
                         </h4>
                         <p>Props:</p>
                         <p>$color=undefined $bg=undefined</p>
-                    </FnModsNoColorBgBlueGreen>
+                    </FnModsNotColorBgBlueGreen>
                 </Wrong>
             </Group>
         </Root>

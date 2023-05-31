@@ -44,7 +44,7 @@ export type FnLiteralsModValue<
                 >;
       };
 
-type FnLiteralsNoModValue<
+type FnLiteralsNotModValue<
     ModName extends ModNameFn,
     ModValue extends ModValueFn | undefined,
     Props extends ComponentProps
@@ -68,13 +68,13 @@ type FnLiteralsNoModValue<
 export type FnModeReturn<
     ModName extends ModNameFn,
     ModValue extends ModValueFn | undefined,
-    No extends boolean
+    Not extends boolean
 > = <Props extends ComponentProps, Theme extends ComponentProps>(
     fn:
         | Literals<Props>
         | FnLiterals<
-              No extends true
-                  ? FnLiteralsNoModValue<ModName, ModValue, Props>
+              Not extends true
+                  ? FnLiteralsNotModValue<ModName, ModValue, Props>
                   : FnLiteralsModValue<ModName, ModValue, Props>,
               Props,
               Theme
@@ -85,10 +85,10 @@ export type FnModeReturn<
 /**
  * Type mode for mods('color', 'blue') and etc
  */
-export type FnMode<No extends boolean> = <
-    ModName extends ModNameFn,
-    ModValue extends ModValueFn | undefined = undefined
+export type FnMode<Not extends boolean> = <
+    const ModName extends ModNameFn,
+    const ModValue extends ModValueFn | undefined = undefined
 >(
     name: ModName,
     value?: ModValue
-) => FnModeReturn<ModName, ModValue, No>;
+) => FnModeReturn<ModName, ModValue, Not>;

@@ -85,11 +85,11 @@ Apply styles if `size` is `undefined` or `color` is not `blue`:
 import { mods, Mods } from '../shared/styled';
 
 export const StyledComponent = styled.div<Mods<'size' | 'color'>>`
-    ${mods.no.size`
+    ${mods.not.size`
         font-size: 14px;
     `};
 
-    ${mods.no.color.blue`
+    ${mods.not.color.blue`
         border: 1px solid black;
     `};
 `;
@@ -398,9 +398,11 @@ export const StyledComponent = styled.div<Mods<'size'> & { padding: string }>`
     padding: ${({ padding }) => padding};
 `;
 ```
+
 ```tsx
 <StyledComponent size="small" padding="12px" />
 ```
+
 ---
 
 _With the `SCProps` type:_
@@ -418,12 +420,12 @@ export const StyledComponent = styled.div<
     padding: ${({ $padding }) => $padding};
 `;
 ```
+
 ```tsx
 <StyledComponent $size="small" $padding="12px" />
 ```
 
 :point_up: **You do not need to add the `$` prefix to the `mods` modifiers. Modifiers are automatically searched with and without the prefix.**
-
 
 ## Usage modifiers
 
@@ -432,19 +434,22 @@ The library assumes a large number of options for using modifiers. Each of them 
 Let's take a closer look at how modifiers can be used:
 
 ### Using in Object mode
+
 The `Object mode` allows you to use Dot Notation to use modifiers that you enter in `config` beforehand.
 
 This mode is best suited for applying styles relative to common modifiers that will be reused in other components.
 
 The features of `Object mode` modifiers:
-- Writing modifiers with Dot Notation 
-- When writing modifiers, you will have autocomplete
-- Types will be automatically generated based on your `config`, which you can use with the `Mods` type that you create when you initialize the library
-- You will get modifiers that are reused throughout the project in a single format
+
+-   Writing modifiers with Dot Notation
+-   When writing modifiers, you will have autocomplete
+-   Types will be automatically generated based on your `config`, which you can use with the `Mods` type that you create when you initialize the library
+-   You will get modifiers that are reused throughout the project in a single format
 
 **Styles will be applied if:**
 
 _`color` is not `undefined`_
+
 ```ts
 export const ModsColor = styled.div<Mods<'color'>>`
     ${mods.color`
@@ -452,25 +457,31 @@ export const ModsColor = styled.div<Mods<'color'>>`
     `};
 `;
 ```
+
 ```tsx
-<ModsColor color='blue' />
+<ModsColor color="blue" />
 ```
+
 ---
 
 _`color` is `undefined`_
+
 ```ts
-export const ModsNoColor = styled.div<Mods<'color'>>`
-    ${mods.no.color`
+export const ModsNotColor = styled.div<Mods<'color'>>`
+    ${mods.not.color`
         color: blue;
     `};
 `;
 ```
+
 ```tsx
-<ModsNoColor />
+<ModsNotColor />
 ```
+
 ---
 
 _`color` is `blue` and is not `undefined`_
+
 ```ts
 export const ModsColorBlue = styled.div<Mods<'color'>>`
     ${mods.color.blue`
@@ -478,21 +489,25 @@ export const ModsColorBlue = styled.div<Mods<'color'>>`
     `};
 `;
 ```
+
 ```tsx
-<ModsColorBlue color='blue' />
+<ModsColorBlue color="blue" />
 ```
+
 ---
 
 _`color` is not `blue` and is not `undefined`_
+
 ```ts
-export const ModsNoColorBlue = styled.div<Mods<'color'>>`
-    ${mods.no.color.blue`
+export const ModsNotColorBlue = styled.div<Mods<'color'>>`
+    ${mods.not.color.blue`
         color: white;
     `};
 `;
 ```
+
 ```tsx
-<ModsNoColorBlue color='white' />
+<ModsNotColorBlue color="white" />
 ```
 
 ### Using in Function mode
@@ -502,222 +517,272 @@ The `Function mode` allows you to apply styles using modifiers that are not in y
 This mode is best suited for applying styles relative to private modifiers which will not be reused in other components.
 
 The features of `Function mode` modifiers:
-- Using custom modifiers that are not in `config`
-- Ability to specify styles relative to multiple modifiers
-- Ability to specify styles relative to multiple modifier values
-- Types for them are written manually
-- No autocomplete when writing
+
+-   Using custom modifiers that are not in `config`
+-   Ability to specify styles relative to multiple modifiers
+-   Ability to specify styles relative to multiple modifier values
+-   Types for them are written manually
+-   No autocomplete when writing
 
 **Styles will be applied if:**
 
 _`color` is not `undefined`_
+
 ```ts
-export const FnModsColor = styled.div<{ color?: string; }>`
+export const FnModsColor = styled.div<{ color?: string }>`
     ${mods('color')`
         color: blue;
     `};
 `;
 ```
+
 ```tsx
-<FnModsColor color='blue' />
+<FnModsColor color="blue" />
 ```
+
 ---
 
 _`color` is `undefined`_
+
 ```ts
-export const FnModsNoColor = styled.div<{ color?: string; }>`
-    ${mods.no('color')`
+export const FnModsNotColor = styled.div<{ color?: string }>`
+    ${mods.not('color')`
         color: blue;
     `};
 `;
 ```
+
 ```tsx
-<FnModsNoColor />
+<FnModsNotColor />
 ```
+
 ---
 
 _`color` is `blue` and is not `undefined`_
+
 ```ts
-export const FnModsColorBlue = styled.div<{ color?: string; }>`
+export const FnModsColorBlue = styled.div<{ color?: string }>`
     ${mods('color', 'blue')`
         color: blue;
     `};
 `;
 ```
+
 ```tsx
-<FnModsColorBlue color='blue' />
+<FnModsColorBlue color="blue" />
 ```
+
 ---
 
 _`color` is not `blue` and is not `undefined`_
+
 ```ts
-export const FnModsNoColorBlue = styled.div<{ color?: string; }>`
-    ${mods.no('color', 'blue')`
+export const FnModsNotColorBlue = styled.div<{ color?: string }>`
+    ${mods.not('color', 'blue')`
         color: black;
     `};
 `;
 ```
+
 ```tsx
-<FnModsNoColorBlue color='black' />
+<FnModsNotColorBlue color="black" />
 ```
+
 ---
 
 _`color` is `blue` or `black` and is not `undefined`_
+
 ```ts
-export const FnModsColorBlueBlack = styled.div<{ color?: string; }>`
+export const FnModsColorBlueBlack = styled.div<{ color?: string }>`
     ${mods('color', ['blue', 'black'])`
         color: black;
     `};
 `;
 ```
+
 ```tsx
-<FnModsColorBlueBlack color='black' />
+<FnModsColorBlueBlack color="black" />
 ```
+
 ---
 
 _`color` is not `blue` or `black` and is not `undefined`_
+
 ```ts
-export const FnModsNoColorBlueBlack = styled.div<{ color?: string; }>`
-    ${mods.no('color', ['blue', 'black'])`
+export const FnModsNotColorBlueBlack = styled.div<{ color?: string }>`
+    ${mods.not('color', ['blue', 'black'])`
         color: white;
     `};
 `;
 ```
+
 ```tsx
-<FnModsNoColorBlueBlack color='white' />
+<FnModsNotColorBlueBlack color="white" />
 ```
+
 ---
 
 _`color` and `bg` is not `undefined`_
+
 ```ts
-export const FnModsColorBg = styled.div<{ color?: string; bg?: string; }>`
+export const FnModsColorBg = styled.div<{ color?: string; bg?: string }>`
     ${mods(['color', 'bg'])`
         color: black;
     `};
 `;
 ```
+
 ```tsx
-<FnModsColorBg color='black' bg='green' />
+<FnModsColorBg color="black" bg="green" />
 ```
+
 ---
 
 _`color` and `bg` is `undefined`_
+
 ```ts
-export const FnModsNoColorBg = styled.div<{ color?: string; bg?: string; }>`
-    ${mods.no(['color', 'bg'])`
+export const FnModsNotColorBg = styled.div<{ color?: string; bg?: string }>`
+    ${mods.not(['color', 'bg'])`
         color: black;
     `};
 `;
 ```
+
 ```tsx
-<FnModsNoColorBg />
+<FnModsNotColorBg />
 ```
+
 ---
 
 _`color` and `bg` is `blue` and is not `undefined`_
+
 ```ts
-export const FnModsColorBgBlue = styled.div<{ color?: string; bg?: string; }>`
+export const FnModsColorBgBlue = styled.div<{ color?: string; bg?: string }>`
     ${mods(['color', 'bg'], 'blue')`
         color: black;
     `};
 `;
 ```
+
 ```tsx
-<FnModsColorBgBlue color='blue' bg='blue' />
+<FnModsColorBgBlue color="blue" bg="blue" />
 ```
+
 ---
 
 _`color` and `bg` is not `blue` and is not `undefined`_
+
 ```ts
-export const FnModsNoColorBgBlue = styled.div<{ color?: string; bg?: string; }>`
-    ${mods.no(['color', 'bg'], 'blue')`
+export const FnModsNotColorBgBlue = styled.div<{ color?: string; bg?: string }>`
+    ${mods.not(['color', 'bg'], 'blue')`
         color: black;
     `};
 `;
 ```
+
 ```tsx
-<FnModsNoColorBgBlue color='black' bg='green' />
+<FnModsNotColorBgBlue color="black" bg="green" />
 ```
+
 ---
 
 _`color` and `bg` together is `blue` or `green` and is not `undefined`_
+
 ```ts
-export const FnModsColorBgBlueGreen = styled.div<{ color?: string; bg?: string; }>`
+export const FnModsColorBgBlueGreen = styled.div<{
+    color?: string;
+    bg?: string;
+}>`
     ${mods(['color', 'bg'], ['blue', 'green'])`
         color: black;
     `};
 `;
 ```
+
 ```tsx
-<FnModsColorBgBlueGreen color='blue' bg='blue' />
+<FnModsColorBgBlueGreen color="blue" bg="blue" />
 ```
+
 ---
 
 _`color` and `bg` together is not `blue` or `green` and is not `undefined`_
+
 ```ts
-export const FnModsNoColorBgBlueGreen = styled.div<{ color?: string; bg?: string; }>`
-    ${mods.no(['color', 'bg'], ['blue', 'green'])`
+export const FnModsNotColorBgBlueGreen = styled.div<{
+    color?: string;
+    bg?: string;
+}>`
+    ${mods.not(['color', 'bg'], ['blue', 'green'])`
         color: black;
     `};
 `;
 ```
+
 ```tsx
-<FnModsNoColorBgBlueGreen color='blue' bg='green' />
+<FnModsNotColorBgBlueGreen color="blue" bg="green" />
 ```
 
 ### Call as a literals
+
 You can call any modifier, regardless of mode, as a literal and immediately pass the necessary styles.
 
 #### Object mode
+
 ```ts
 export const StyledComponent = styled.div<Mods<'size'>>`
     ${mods.size`
         padding: 20px;
     `};
-    
+
     ${mods.size.small`
         font-size: 14px;
     `};
 `;
 ```
+
 ```tsx
 <StyledComponent size="small" />
 ```
+
 ---
 
 #### Function mode
+
 ```ts
-export const StyledComponent = styled.div<Mods<'size'> & { padding: string; }>`
+export const StyledComponent = styled.div<Mods<'size'> & { padding: string }>`
     ${mods('size')`
         font-size: 16px;
         padding: ${(props) => props.padding};
     `};
-    
+
     ${mods('size', 'small')`
         font-size: 14px;
         padding: ${(props) => props.padding};
     `};
 `;
 ```
+
 ```tsx
 <StyledComponent size="small" />
 ```
 
 ### Call as a function
+
 You can call any modifier, regardless of mode, as a function that will return the `css` method from `styled-components`.
 
 The feature of this method is that you get possible values and all the properties of the styled component in the arguments of the passed callback function.
 
 #### Object mode
+
 ```ts
-export const StyledComponent = styled.div<Mods<'size'> & { padding: string; }>`
+export const StyledComponent = styled.div<Mods<'size'> & { padding: string }>`
     ${mods.size(
         (value, props) => css`
             font-size: ${value === 'small' ? '14px' : '16px'};
             padding: ${props.padding};
         `
     )};
-    
+
     ${mods.size.small(
         (value, props) => css`
             font-size: 14px;
@@ -726,22 +791,28 @@ export const StyledComponent = styled.div<Mods<'size'> & { padding: string; }>`
     )};
 `;
 ```
+
 ```tsx
 <StyledComponent size="small" />
 ```
+
 ---
 
 #### Function mode
+
 ```ts
-export const StyledComponent = styled.div<Mods<'size'> & { padding: string; }>`
+export const StyledComponent = styled.div<Mods<'size'> & { padding: string }>`
     ${mods('size')(
         (value, props) => css`
             font-size: ${value === 'small' ? '14px' : '16px'};
             padding: ${props.padding};
         `
     )};
-    
-    ${mods('size', 'small')(
+
+    ${mods(
+        'size',
+        'small'
+    )(
         (value, props) => css`
             font-size: 14px;
             padding: ${props.padding};
@@ -749,6 +820,7 @@ export const StyledComponent = styled.div<Mods<'size'> & { padding: string; }>`
     )};
 `;
 ```
+
 ```tsx
 <StyledComponent size="small" />
 ```
@@ -757,6 +829,7 @@ export const StyledComponent = styled.div<Mods<'size'> & { padding: string; }>`
 If you use `Function mode`, use modifiers from `config` with type `Mods` and pass an array of modifiers or an array of modifier values, be sure to put `as const` after the array so that TypeScript correctly displays which properties will be available in the `value` argument passed to the callback function.
 
 _For example:_
+
 ```ts
 const config = {
     color: 'white' | 'blue' | 'black',
@@ -770,8 +843,8 @@ export const StyledComponent = styled.div<Mods<'color' | 'bg'>>`
             // value: 'blue' | 'black'
         `
     )};
-    
-    ${mods.no('color', ['blue', 'black'] as const)(
+
+    ${mods.not('color', ['blue', 'black'] as const)(
         (value, props) => css`
             // value: 'white'
         `
@@ -783,7 +856,7 @@ export const StyledComponent = styled.div<Mods<'color' | 'bg'>>`
         `
     )};
 
-    ${mods.no(['color', 'bg'] as const)(
+    ${mods.not(['color', 'bg'] as const)(
         (value, props) => css`
             // value: { color: undefined, bg: undefined }
         `
@@ -795,19 +868,19 @@ export const StyledComponent = styled.div<Mods<'color' | 'bg'>>`
         `
     )};
 
-    ${mods.no(['color', 'bg'] as const, 'blue')(
+    ${mods.not(['color', 'bg'] as const, 'blue')(
         (value, props) => css`
             // value: { color: 'white' | 'black', bg: 'green' | 'black' }
         `
     )};
-    
+
     ${mods(['color', 'bg'] as const, ['blue', 'black'] as const)(
         (value, props) => css`
             // value: { color: 'blue' | 'black', bg: 'blue' | 'black' }
         `
     )};
-    
-    ${mods.no(['color', 'bg'] as const, ['blue', 'black'] as const)(
+
+    ${mods.not(['color', 'bg'] as const, ['blue', 'black'] as const)(
         (value, props) => css`
             // value: { color: 'white' | 'blue' | 'black', bg: 'green' | 'blue' | 'black' }
         `
@@ -816,6 +889,7 @@ export const StyledComponent = styled.div<Mods<'color' | 'bg'>>`
 ```
 
 ### Using mixins
+
 To apply a set of styles for different modifier values, you can create mixins.
 
 ```ts
@@ -835,6 +909,7 @@ const StyledComponen = styled.div<Mods<'size'>>`
 ```
 
 ### Additional features
+
 You can use modifiers with `boolean` values and pass them as `string` and as `boolean`:
 
 ```ts
@@ -842,31 +917,33 @@ export const StyledComponent = styled.div<Mods<'disabled'>>`
     ${mods.disabled.true`
         color: gray;
     `};
-    
+
     ${mods('disabled', true)`
         color: gray;
     `};
-    
+
     ${mods('disabled', 'true')`
         color: gray;
     `};
-    
+
     ${mods.disabled.false`
         color: black;
     `};
-    
+
     ${mods('disabled', false)`
         color: black;
     `};
-    
+
     ${mods('disabled', 'false')`
         color: black;
     `};
 `;
 ```
+
 ```tsx
 <StyledComponent disabled />
 ```
+
 ---
 
 You can use modifiers with `number` values:
@@ -876,15 +953,17 @@ export const StyledComponent = styled.div<Mods<'spacing'>>`
     ${mods.spacing[12]`
         padding: 12px;
     `};
-    
+
     ${mods.spacing[24]`
         padding: 24px;
     `};
 `;
 ```
+
 ```tsx
 <StyledComponent spacing={12} />
 ```
+
 ---
 
 You can do any `nesting` of modifiers:
@@ -894,7 +973,7 @@ export const StyledComponent = styled.div<Mods<'spacing' | 'size'>>`
     ${mods.size.small`
         font-size: 14px;
     `};
-    
+
     ${mods.spacing[12]`
         padding: 12px;
         
@@ -904,9 +983,11 @@ export const StyledComponent = styled.div<Mods<'spacing' | 'size'>>`
     `};
 `;
 ```
+
 ```tsx
-<StyledComponent spacing={12} size='small' />
+<StyledComponent spacing={12} size="small" />
 ```
+
 ---
 
 You can write `additional logic` for processing modifier values:
@@ -920,6 +1001,7 @@ export const StyledComponent = styled.div<{ src: string }>`
     )};
 `;
 ```
+
 ```tsx
 <StyledComponent src='https://www.facebook.com/' />
 <StyledComponent src='https://www.instagram.com/' />

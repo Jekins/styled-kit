@@ -18,12 +18,12 @@ export const ModsColor = styled.div<SCProps<Mods<'color'>>>`
     )};
 `;
 
-export const ModsNoColor = styled.div<SCProps<Mods<'color'>>>`
-    ${mods.no.color`
+export const ModsNotColor = styled.div<SCProps<Mods<'color'>>>`
+    ${mods.not.color`
         color: white;
     `};
 
-    ${mods.no.color(
+    ${mods.not.color(
         (value, props) => css`
             background-color: darkslateblue;
         `
@@ -42,12 +42,12 @@ export const ModsColorBlue = styled.div<SCProps<Mods<'color'>>>`
     )};
 `;
 
-export const ModsNoColorBlue = styled.div<SCProps<Mods<'color'>>>`
-    ${mods.no.color.blue`
+export const ModsNotColorBlue = styled.div<SCProps<Mods<'color'>>>`
+    ${mods.not.color.blue`
         color: white;
     `};
 
-    ${mods.no.color.blue(
+    ${mods.not.color.blue(
         (value, props) => css`
             background-color: ${value === 'black' && 'darkslateblue'};
         `
@@ -72,12 +72,12 @@ export const FnModsColor = styled.div<SCProps<Mods<'color'>>>`
     )};
 `;
 
-export const FnModsNoColor = styled.div<SCProps<Mods<'color'>>>`
-    ${mods.no('color')`
+export const FnModsNotColor = styled.div<SCProps<Mods<'color'>>>`
+    ${mods.not('color')`
         color: white;
     `};
 
-    ${mods.no('color')(
+    ${mods.not('color')(
         (value, props) => css`
             background-color: ${value === undefined && 'darkslateblue'};
         `
@@ -99,12 +99,12 @@ export const FnModsColorBlue = styled.div<SCProps<Mods<'color'>>>`
     )};
 `;
 
-export const FnModsNoColorBlue = styled.div<SCProps<Mods<'color'>>>`
-    ${mods.no('color', 'blue')`
+export const FnModsNotColorBlue = styled.div<SCProps<Mods<'color'>>>`
+    ${mods.not('color', 'blue')`
         color: white;
     `};
 
-    ${mods.no(
+    ${mods.not(
         'color',
         'blue'
     )(
@@ -126,12 +126,12 @@ export const FnModsColorBlueBlack = styled.div<SCProps<Mods<'color'>>>`
     )};
 `;
 
-export const FnModsNoColorBlueBlack = styled.div<SCProps<Mods<'color'>>>`
-    ${mods.no('color', ['blue', 'black'])`
+export const FnModsNotColorBlueBlack = styled.div<SCProps<Mods<'color'>>>`
+    ${mods.not('color', ['blue', 'black'])`
         color: white;
     `};
 
-    ${mods.no('color', ['blue', 'black'] as const)(
+    ${mods.not('color', ['blue', 'black'] as const)(
         (value, props) => css`
             background-color: ${value === 'white' && 'darkslateblue'};
         `
@@ -154,12 +154,12 @@ export const FnModsColorBg = styled.div<SCProps<Mods<'color' | 'bg'>>>`
     )};
 `;
 
-export const FnModsNoColorBg = styled.div<SCProps<Mods<'color' | 'bg'>>>`
-    ${mods.no(['color', 'bg'])`
+export const FnModsNotColorBg = styled.div<SCProps<Mods<'color' | 'bg'>>>`
+    ${mods.not(['color', 'bg'])`
         color: white;
     `};
 
-    ${mods.no(['color', 'bg'] as const)(
+    ${mods.not(['color', 'bg'] as const)(
         (value, props) => css`
             background-color: ${value.color === undefined &&
             value.bg === undefined &&
@@ -183,12 +183,12 @@ export const FnModsColorBgBlue = styled.div<SCProps<Mods<'color' | 'bg'>>>`
     )};
 `;
 
-export const FnModsNoColorBgBlue = styled.div<SCProps<Mods<'color' | 'bg'>>>`
-    ${mods.no(['color', 'bg'], 'blue')`
+export const FnModsNotColorBgBlue = styled.div<SCProps<Mods<'color' | 'bg'>>>`
+    ${mods.not(['color', 'bg'], 'blue')`
         color: white;
     `};
 
-    ${mods.no(
+    ${mods.not(
         ['color', 'bg'] as const,
         'blue'
     )(
@@ -217,16 +217,16 @@ export const FnModsColorBgBlueGreen = styled.div<SCProps<Mods<'color' | 'bg'>>>`
     )};
 `;
 
-export const FnModsNoColorBgBlueGreen = styled.div<
+export const FnModsNotColorBgBlueGreen = styled.div<
     SCProps<Mods<'color' | 'bg'>>
 >`
-    ${mods.no(['color', 'bg'], ['blue', 'green'])`
+    ${mods.not(['color', 'bg'], ['blue', 'green'])`
         color: white;
     `};
 
-    ${mods.no(
-        ['color', 'bg'] as const,
-        ['blue', 'green'] as const
+    ${mods.not(
+        ['color', 'bg'],
+        ['blue', 'green']
     )(
         (value, props) => css`
             background-color: ${value.color === 'blue' &&

@@ -3,7 +3,7 @@ import { SCProps } from '@styled-kit/mods';
 import { Mods, mods, RMods } from '../../shared/styled';
 
 export const Button = styled.button<SCProps<{ defaultButton?: boolean }>>`
-    ${mods.no('defaultButton')`
+    ${mods.not('defaultButton')`
         background: white;
         padding: 12px 20px;
         border: 1px solid #ccc;

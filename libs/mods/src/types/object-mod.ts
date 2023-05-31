@@ -26,16 +26,16 @@ export type ObjModeFn<ModValue extends ModifierValue | undefined> = <
 export type ObjModeChildren<
     Mods extends ModsConfigStructure,
     ModName extends keyof Mods,
-    No extends boolean
+    Not extends boolean
 > = Mods[ModName][number] extends boolean
     ? {
           [Key in boolean as `${Key}`]: ObjModeFn<
-              No extends true ? Exclude<Mods[ModName][number], Key> : Key
+              Not extends true ? Exclude<Mods[ModName][number], Key> : Key
           >;
       }
     : {
           [Key in Exclude<Mods[ModName][number], boolean>]: ObjModeFn<
-              No extends true ? Exclude<Mods[ModName][number], Key> : Key
+              Not extends true ? Exclude<Mods[ModName][number], Key> : Key
           >;
       };
 
@@ -45,6 +45,6 @@ export type ObjModeChildren<
 export type ObjMode<
     Mods extends ModsConfigStructure,
     ModName extends keyof Mods,
-    No extends boolean
-> = ObjModeChildren<Mods, ModName, No> &
-    ObjModeFn<No extends true ? undefined : Mods[ModName][number]>;
+    Not extends boolean
+> = ObjModeChildren<Mods, ModName, Not> &
+    ObjModeFn<Not extends true ? undefined : Mods[ModName][number]>;

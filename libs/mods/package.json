@@ -1,13 +1,13 @@
 {
     "name": "@styled-kit/mods",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "type": "commonjs",
     "description": "Allows you to write modifiers for Styled Components and Linaria with autocomplete. As well as automatically generate for them types.",
     "author": "Jekins",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Jekins/styled-kit/tree/main/packages/mods"
+        "url": "https://github.com/Jekins/styled-kit"
     },
     "keywords": [
         "StyledComponents",
