@@ -13,7 +13,7 @@ and with autocomplete. As well as automatically generate for them [types](https:
 -   Automatic type generation for modifiers
 -   Possibility to use custom modifiers
 -   Applying styles relative to multiple modifiers or multiple values
--   Ultra-small size
+-   Ultra-small size (0.4 KB gzip)
 
 ## A Quick Look
 
@@ -749,15 +749,13 @@ export const StyledComponent = styled.div<Mods<'size'>>`
 #### Function mode
 
 ```ts
-export const StyledComponent = styled.div<Mods<'size'> & { padding: string }>`
+export const StyledComponent = styled.div<Mods<'size'>`
     ${mods('size')`
         font-size: 16px;
-        padding: ${(props) => props.padding};
     `};
 
     ${mods('size', 'small')`
         font-size: 14px;
-        padding: ${(props) => props.padding};
     `};
 `;
 ```

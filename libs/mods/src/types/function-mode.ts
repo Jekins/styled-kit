@@ -86,8 +86,8 @@ export type FnModeReturn<
  * Type mode for mods('color', 'blue') and etc
  */
 export type FnMode<Not extends boolean> = <
-    const ModName extends ModNameFn,
-    const ModValue extends ModValueFn | undefined = undefined
+    ModName extends ModNameFn,
+    ModValue extends ModValueFn | undefined = undefined
 >(
     name: ModName,
     value?: ModValue
