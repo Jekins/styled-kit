@@ -313,7 +313,7 @@ const createModsObject = <Mods extends ModsConfigStructure>(
 export const initMods = <Mods extends ModsConfigStructure>(
     mods: Mods,
     options: InitModsOptions = {
-        onlyFalseValues: true,
+        onlyFalseValues: false,
     }
 ): InitMods<Mods> => {
     const structureForObjMode = Object.entries(mods).map(([name, values]) => {
