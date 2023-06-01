@@ -20,6 +20,16 @@ export type ModsStructure<
 } & FnMode<Not>;
 
 /**
+ * Initialization modifiers options
+ */
+export type InitModsOptions = {
+    /**
+     * If `true`, then modifiers with value `false` will not work when `undefined` is set
+     */
+    onlyFalseValues?: boolean;
+};
+
+/**
  * Type of method for initializing modifiers relative to config
  */
 export type InitMods<Mods extends ModsConfigStructure> =

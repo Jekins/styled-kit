@@ -163,9 +163,9 @@ import { ModifiersConfig, Modifiers } from '@styled-kit/mods';
 type ModsConfig = ModifiersConfig<typeof config>;
 
 export type Mods<
-    N extends keyof ModsConfig = keyof ModsConfig,
-    V extends ModsConfig[N] = undefined
-> = Modifiers<ModsConfig, N, V>;
+    Names extends keyof ModsConfig = keyof ModsConfig,
+    Value extends ModsConfig[Name] = undefined
+> = Modifiers<ModsConfig, Name, Value>;
 ```
 
 _src/shared/styled/index.ts_
@@ -186,6 +186,7 @@ export type { Mods } from './types';
     -   [Creating a modifiers configuration](#creating-a-modifiers-configuration)
     -   [Creating a types](#creating-a-types)
     -   [Initializing the modifiers](#initializing-the-modifiers)
+    -   [Initializing options](#initializing-options)
 -   [Usage types](#usage-types)
     -   [Type `Mods`](#type-mods)
     -   [Type `RMods`](#type-rmods)
@@ -265,14 +266,14 @@ import { ModifiersConfig, Modifiers } from '@styled-kit/mods';
 type ModsConfig = ModifiersConfig<typeof config>;
 
 export type Mods<
-    N extends keyof ModsConfig = keyof ModsConfig,
-    V extends ModsConfig[N] = undefined
-> = Modifiers<ModsConfig, N, V>;
+    Names extends keyof ModsConfig = keyof ModsConfig,
+    Value extends ModsConfig[Name] = undefined
+> = Modifiers<ModsConfig, Name, Value>;
 
 export type RMods<
-    N extends keyof ModsConfig = keyof ModsConfig,
-    V extends ModsConfig[N] = undefined
-> = Required<Mods<N, V>>;
+    Names extends keyof ModsConfig = keyof ModsConfig,
+    Value extends ModsConfig[Name] = undefined
+> = Required<Mods<Name, Value>>;
 ```
 
 `ModsConfig` is a type representing the configuration structure of modifiers.
@@ -297,6 +298,52 @@ import { config } from './config';
 
 export const mods = initMods(config);
 export type { Mods, RMods } from './types';
+```
+
+### Initializing options
+When initializing modifiers, you can set some options.
+
+```ts
+export const mods = initMods(config, {
+    onlyFalseValues: true,
+});
+```
+
+#### `onlyFalseValues`
+_(default: `false`)_
+
+If `true`, then modifiers with value `false` will not work when `undefined` is set.
+
+_`onlyFalseValues: true`_
+```ts
+import { mods, Mods } from '../shared/styled';
+
+export const StyledComponent = styled.div<Mods<'disabled'>>`
+    ${mods.disabled.false`
+        color: blue;
+    `};
+`;
+```
+```tsx
+// Styles will not be applied because disabled = undefined
+<StyledComponent /> 
+```
+
+
+_`onlyFalseValues: false`_
+```ts
+import { mods, Mods } from '../shared/styled';
+
+export const StyledComponent = styled.div<Mods<'disabled'>>`
+    ${mods.disabled.false`
+        color: blue;
+    `};
+`;
+```
+
+```tsx
+// Styles will be applied
+<StyledComponent /> 
 ```
 
 ## Usage types

@@ -4,11 +4,11 @@ import { config } from './config';
 type ModsConfig = ModifiersConfig<typeof config>;
 
 export type Mods<
-    M extends keyof ModsConfig,
-    V extends ModsConfig[M] = undefined
-> = Modifiers<ModsConfig, M, V>;
+    Name extends keyof ModsConfig,
+    Value extends ModsConfig[Name] = undefined
+> = Modifiers<ModsConfig, Name, Value>;
 
 export type RMods<
-    M extends keyof ModsConfig = keyof ModsConfig,
-    V extends ModsConfig[M] = undefined
-> = Required<Mods<M, V>>;
+    Name extends keyof ModsConfig = keyof ModsConfig,
+    Value extends ModsConfig[Name] = undefined
+> = Required<Mods<Name, Value>>;

@@ -7,6 +7,7 @@ import {
     ComponentProps,
     ModNameFn,
     ModValueFn,
+    InitModsOptions,
 } from './types';
 import { css, Interpolation, ThemedStyledProps } from 'styled-components';
 import { FnMode } from './types/function-mode';
@@ -15,18 +16,42 @@ import { ObjModeFn } from './types/object-mod';
 /**
  * It tries to return the value of mod from props, checking its presence with and without the prefix `$`
  * @param name
+ * @param value
  * @param props
+ * @param options
  */
 const getValueFromProps = <
     ModName extends keyof any,
+    ModValue extends ModValueFn | undefined,
     Props extends ComponentProps
 >(
     name: ModName,
-    props: Props
+    value: ModValue,
+    props: Props,
+    options: InitModsOptions
 ) => {
     const stringName = String(name);
+    const searchResultWithPrefix = props[`$${stringName}`];
+    const valueFromPropsByName =
+        searchResultWithPrefix === undefined
+            ? props[stringName]
+            : searchResultWithPrefix;
 
-    return props[`$${stringName}`] || props[stringName];
+    const isTrueFalse = (target: ModValue) => {
+        return (
+            typeof target === 'boolean' ||
+            target === 'true' ||
+            target === 'false'
+        );
+    };
+
+    const hasBooleanValue = Array.isArray(value)
+        ? value.some(isTrueFalse)
+        : isTrueFalse(value);
+
+    return options.onlyFalseValues || !hasBooleanValue
+        ? valueFromPropsByName
+        : valueFromPropsByName ?? false;
 };
 
 /**
@@ -65,16 +90,22 @@ const returnStyles = <
 /**
  * A method for object mode to get styles by modifiers
  * @param not
+ * @param options
  */
 export const getObjMode =
-    (not?: boolean) =>
+    (not: boolean, options: InitModsOptions) =>
     <ModName extends keyof any, ModValue extends ModifierValue | undefined>(
         name: ModName,
         value?: ModValue
     ): ObjModeFn<ModName, ModValue> => {
         return (literalsAndFnLiterals, ...interpolations) => {
             return (props) => {
-                const modValueFromProps = getValueFromProps(name, props);
+                const modValueFromProps = getValueFromProps(
+                    name,
+                    value,
+                    props,
+                    options
+                );
                 const isModUndefined = modValueFromProps === undefined;
 
                 /**
@@ -119,9 +150,10 @@ export const getObjMode =
 /**
  * A method for function mode to get styles by modifiers
  * @param not
+ * @param options
  */
 export const getFnMode =
-    (not?: boolean): FnMode<false> =>
+    (not: boolean, options: InitModsOptions): FnMode<false> =>
     (name, value) => {
         return (literalsAndFnLiterals, ...interpolations) => {
             return (props) => {
@@ -133,7 +165,12 @@ export const getFnMode =
                     : [value];
 
                 const modValueFromProps = names.reduce((acc, targetName) => {
-                    acc[targetName] = getValueFromProps(targetName, props);
+                    acc[targetName] = getValueFromProps(
+                        targetName,
+                        value,
+                        props,
+                        options
+                    );
 
                     return acc;
                 }, {} as Record<string, ReturnType<typeof getValueFromProps>>);
@@ -248,45 +285,51 @@ export const getFnMode =
  * @param name
  * @param values
  * @param not
+ * @param options
  */
 const createModsObject = <Mods extends ModsConfigStructure>(
     name: keyof Mods,
     values: ReadonlyArray<ModifierValue>,
-    not?: boolean
+    not: boolean,
+    options: InitModsOptions
 ) => {
     const valuesObject = values.reduce((acc, value) => {
         const preparedValue = typeof value === 'number' ? value : String(value);
 
         return {
             ...acc,
-            [preparedValue]: getObjMode(not)(name, value),
+            [preparedValue]: getObjMode(not, options)(name, value),
         };
     }, {});
 
-    return Object.assign(getObjMode(not)(name), valuesObject);
+    return Object.assign(getObjMode(not, options)(name), valuesObject);
 };
 
 /**
  * Creates a complete structure of modifiers for object mode and for function mode
  * @param mods
+ * @param options
  */
 export const initMods = <Mods extends ModsConfigStructure>(
-    mods: Mods
+    mods: Mods,
+    options: InitModsOptions = {
+        onlyFalseValues: true,
+    }
 ): InitMods<Mods> => {
     const structureForObjMode = Object.entries(mods).map(([name, values]) => {
-        return [name, createModsObject(name, values, false)];
+        return [name, createModsObject(name, values, false, options)];
     });
     const objMode = Object.fromEntries(structureForObjMode);
 
     const structureForObjModeWithNo = Object.entries(mods).map(
         ([name, values]) => {
-            return [name, createModsObject(name, values, true)];
+            return [name, createModsObject(name, values, true, options)];
         }
     );
 
     const objModeNo = Object.fromEntries(structureForObjModeWithNo);
 
-    return Object.assign(getFnMode(false), objMode, {
-        not: Object.assign(getFnMode(true), objModeNo),
+    return Object.assign(getFnMode(false, options), objMode, {
+        not: Object.assign(getFnMode(true, options), objModeNo),
     });
 };
