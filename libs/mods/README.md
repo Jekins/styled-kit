@@ -70,6 +70,10 @@ export const StyledComponent = styled.div<
     ${mods.disabled.true`
         color: gray;
     `};
+    
+    ${mods.disabled.false`
+        color: black;
+    `};
 `;
 ```
 
@@ -90,7 +94,7 @@ export const StyledComponent = styled.div<Mods<'size' | 'color'>>`
     `};
 
     ${mods.not.color.blue`
-        border: 1px solid black;
+        background: transparent;
     `};
 `;
 ```
@@ -425,19 +429,19 @@ interface ComponentProps extends RMods<'size'> {}
 Since version 16 of
 React [all specified attributes remain on DOM elements](https://legacy.reactjs.org/blog/2017/09/08/dom-attributes-in-react-16.html)
 and are not removed even if React does not recognize them. That said, if these attributes are not known to React,
-you will see a `Warning' in the developer console in the browser.
+you will see a `Warning` in the developer console in the browser.
 
 To avoid these warnings, [Styled Components recommends](https://styled-components.com/docs/api#transient-props]) use
 prefix `$` in front of properties that should not be included in the DOM element.
 
 The `StyledMods` type will allow you to write Styled Component property types without the `$` prefix,
-but still have valid typing. Internally, it prefixes all types passed to it with `$`.
+but still have valid typing. Internally, it prefixes all types passed to it with `$`
 to all the types passed to it.
 
 _Without the `StyledMods` type:_
 
 ```ts
-export const StyledComponent = styled.div<Mods<'size'> & { padding: string }>`
+export const StyledComponent = styled.div<Mods<'size'> & { padding: string; }>`
     ${mods.size.small`
         font-size: 14px;
     `};
