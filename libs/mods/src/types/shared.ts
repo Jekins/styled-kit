@@ -1,9 +1,7 @@
 import {
     CSSObject,
-    FlattenInterpolation,
+    DefaultTheme,
     Interpolation,
-    InterpolationFunction,
-    ThemedStyledProps,
 } from 'styled-components';
 
 /**
@@ -14,7 +12,9 @@ export type ModifierValue = string | number | boolean;
 /**
  * Type of component props
  */
-export type ComponentProps = ThemedStyledProps<Record<string, any>, any>;
+export type ComponentProps = Record<string, any>;
+
+export type ThemedStyledProps<Props extends ComponentProps, Theme extends DefaultTheme> = Props & { theme: Theme }
 
 /**
  * Type of object with configuration of modifiers
@@ -36,11 +36,10 @@ export type ModValueFn = ModifierValue | ReadonlyArray<ModifierValue>;
  */
 export type Literals<
     Props extends ComponentProps,
-    Theme extends ComponentProps
+    Theme extends DefaultTheme
 > =
     | TemplateStringsArray
     | CSSObject
-    | FlattenInterpolation<Props>
     | Interpolations<Props, Theme>;
 
 /**
@@ -48,19 +47,19 @@ export type Literals<
  */
 export type Interpolations<
     Props extends ComponentProps,
-    Theme extends ComponentProps
-> = ReadonlyArray<Interpolation<ThemedStyledProps<Props, Theme>>>;
+    Theme extends DefaultTheme
+> = Interpolation<ThemedStyledProps<Props, Theme>>;
 
 /**
  * Call Literals as a function
  */
 export type FnLiterals<
     ModValue extends
-        | ModValueFn
+            | ModValueFn
         | { [ModName: string]: ModifierValue | undefined }
         | undefined,
     Props extends ComponentProps,
-    Theme extends ComponentProps
+    Theme extends DefaultTheme
 > = (
     value: ModValue,
     props: Props

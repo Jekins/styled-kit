@@ -4,12 +4,11 @@ import {
     FnLiterals,
     Literals,
     ModNameFn,
-    ModValueFn,
+    ModValueFn, ThemedStyledProps,
 } from './shared';
 import {
+    DefaultTheme,
     Interpolation,
-    InterpolationFunction,
-    ThemedStyledProps,
 } from 'styled-components';
 
 export type ModValueFromFn<ModValue extends ModValueFn | undefined> =
@@ -23,10 +22,10 @@ export type ModValueFromProps<
     ? ModName extends string
         ? Required<Props>[ModName] & Required<Props>[`$${ModName}`]
         : Required<Props>[ModName[number]] &
-              Required<Props>[`$${ModName[number]}`]
+        Required<Props>[`$${ModName[number]}`]
     : ModName extends string
-    ? Props[ModName] & Props[`$${ModName}`]
-    : Props[ModName[number]] & Props[`$${ModName[number]}`];
+        ? Props[ModName] & Props[`$${ModName}`]
+        : Props[ModName[number]] & Props[`$${ModName[number]}`];
 
 export type FnLiteralsModValue<
     ModName extends ModNameFn,
@@ -37,15 +36,15 @@ export type FnLiteralsModValue<
         ? ModValueFromProps<ModName, Props>
         : Extract<ModValueFromProps<ModName, Props>, ModValueFromFn<ModValue>>
     : ModValue extends ModifierValue
-    ? ModValue
-    : {
-          [Key in ModName[number]]: ModValue extends undefined
-              ? ModValueFromProps<Key, Props>
-              : Extract<
+        ? ModValue
+        : {
+            [Key in ModName[number]]: ModValue extends undefined
+                ? ModValueFromProps<Key, Props>
+                : Extract<
                     ModValueFromProps<Key, Props>,
                     ModValueFromFn<ModValue>
                 >;
-      };
+        };
 
 type FnLiteralsNotModValue<
     ModName extends ModNameFn,
@@ -56,34 +55,34 @@ type FnLiteralsNotModValue<
         ? never
         : Exclude<ModValueFromProps<ModName, Props>, ModValueFromFn<ModValue>>
     : ModValue extends ModifierValue
-    ? {
-          [Key in ModName[number]]: Exclude<
-              ModValueFromProps<Key, Props>,
-              ModValue
-          >;
-      }
-    : {
-          [Key in ModName[number]]: ModValue extends undefined
-              ? never
-              : ModValueFromProps<Key, Props>;
-      };
+        ? {
+            [Key in ModName[number]]: Exclude<
+                ModValueFromProps<Key, Props>,
+                ModValue
+            >;
+        }
+        : {
+            [Key in ModName[number]]: ModValue extends undefined
+                ? never
+                : ModValueFromProps<Key, Props>;
+        };
 
 export type FnModeReturn<
     ModName extends ModNameFn,
     ModValue extends ModValueFn | undefined,
     Not extends boolean
-> = <Props extends ComponentProps, Theme extends ComponentProps>(
+> = <Props extends ComponentProps, Theme extends DefaultTheme>(
     fn:
         | Literals<Props, Theme>
         | FnLiterals<
-              Not extends true
-                  ? FnLiteralsNotModValue<ModName, ModValue, Props>
-                  : FnLiteralsModValue<ModName, ModValue, Props>,
-              Props,
-              Theme
-          >,
+        Not extends true
+            ? FnLiteralsNotModValue<ModName, ModValue, Props>
+            : FnLiteralsModValue<ModName, ModValue, Props>,
+        Props,
+        Theme
+    >,
     ...interpolations: Array<Interpolation<ThemedStyledProps<Props, Theme>>>
-) => InterpolationFunction<Props>;
+) => Interpolation<ThemedStyledProps<Props, Theme>>;
 
 /**
  * Type mode for mods('color', 'blue') and etc
@@ -95,3 +94,4 @@ export type FnMode<Not extends boolean> = <
     name: ModName,
     value?: ModValue
 ) => FnModeReturn<ModName, ModValue, Not>;
+

@@ -9,9 +9,9 @@ import {
     ModValueFn,
     InitModsOptions,
 } from './types';
-import { css, Interpolation, ThemedStyledProps } from 'styled-components';
+import { css, DefaultTheme, Interpolation } from 'styled-components';
 import { FnMode } from './types/function-mode';
-import { ObjModeFn } from './types/object-mod';
+import { ObjModeFn } from './types/object-mode';
 
 /**
  * It tries to return the value of mod from props, checking its presence with and without the prefix `$`
@@ -72,8 +72,8 @@ const isValueEqualValueProps = (
  * @param interpolations
  */
 const returnStyles = <
-    L extends Interpolation<ThemedStyledProps<any, any>>,
-    I extends Interpolations<any, any>
+    L extends Interpolation<any>,
+    I extends Interpolations<any, DefaultTheme>
 >(
     literals?: L,
     interpolations?: I
@@ -94,58 +94,58 @@ const returnStyles = <
  */
 export const getObjMode =
     (not: boolean, options: InitModsOptions) =>
-    <ModName extends keyof any, ModValue extends ModifierValue | undefined>(
-        name: ModName,
-        value?: ModValue
-    ): ObjModeFn<ModName, ModValue> => {
-        return (literalsAndFnLiterals, ...interpolations) => {
-            return (props) => {
-                const modValueFromProps = getValueFromProps(
-                    name,
-                    value,
-                    props,
-                    options
-                );
-                const isModUndefined = modValueFromProps === undefined;
+        <ModName extends keyof any, ModValue extends ModifierValue | undefined>(
+            name: ModName,
+            value?: ModValue
+        ): ObjModeFn<ModName, ModValue> => {
+            return (literalsAndFnLiterals, ...interpolations) => {
+                return (props) => {
+                    const modValueFromProps = getValueFromProps(
+                        name,
+                        value,
+                        props,
+                        options
+                    );
+                    const isModUndefined = modValueFromProps === undefined;
 
-                /**
-                 * For `mods.color.blue`
-                 * For `mods.not.color.blue`
-                 * For `mods.color`
-                 * For `mods.not.color`
-                 */
-                if (
-                    value !== undefined || !not
-                        ? isModUndefined
-                        : !isModUndefined
-                ) {
-                    return css``;
-                }
-
-                if (value !== undefined) {
                     /**
                      * For `mods.color.blue`
                      * For `mods.not.color.blue`
+                     * For `mods.color`
+                     * For `mods.not.color`
                      */
-                    const isValuesEqual = isValueEqualValueProps(
-                        value,
-                        modValueFromProps
-                    );
-
-                    if (not ? isValuesEqual : !isValuesEqual) {
+                    if (
+                        value !== undefined || !not
+                            ? isModUndefined
+                            : !isModUndefined
+                    ) {
                         return css``;
                     }
-                }
 
-                const literals =
-                    typeof literalsAndFnLiterals === 'function'
-                        ? literalsAndFnLiterals(modValueFromProps, props)
-                        : literalsAndFnLiterals;
+                    if (value !== undefined) {
+                        /**
+                         * For `mods.color.blue`
+                         * For `mods.not.color.blue`
+                         */
+                        const isValuesEqual = isValueEqualValueProps(
+                            value,
+                            modValueFromProps
+                        );
 
-                return returnStyles(literals, interpolations);
+                        if (not ? isValuesEqual : !isValuesEqual) {
+                            return css``;
+                        }
+                    }
+
+                    const literals =
+                        typeof literalsAndFnLiterals === 'function'
+                            ? literalsAndFnLiterals(modValueFromProps, props)
+                            : literalsAndFnLiterals;
+
+                    return returnStyles(literals, interpolations);
+                };
             };
         };
-    };
 
 /**
  * A method for function mode to get styles by modifiers
@@ -154,131 +154,131 @@ export const getObjMode =
  */
 export const getFnMode =
     (not: boolean, options: InitModsOptions): FnMode<false> =>
-    (name, value) => {
-        return (literalsAndFnLiterals, ...interpolations) => {
-            return (props) => {
-                const names: ModNameFn = Array.isArray(name) ? name : [name];
-                const values: ModValueFn = Array.isArray(value)
-                    ? value
-                    : value === undefined
-                    ? []
-                    : [value];
+        (name, value) => {
+            return (literalsAndFnLiterals, ...interpolations) => {
+                return (props) => {
+                    const names: ModNameFn = Array.isArray(name) ? name : [name];
+                    const values: ModValueFn = Array.isArray(value)
+                        ? value
+                        : value === undefined
+                            ? []
+                            : [value];
 
-                const modValueFromProps = names.reduce((acc, targetName) => {
-                    acc[targetName] = getValueFromProps(
-                        targetName,
-                        value,
-                        props,
-                        options
-                    );
+                    const modValueFromProps = names.reduce((acc, targetName) => {
+                        acc[targetName] = getValueFromProps(
+                            targetName,
+                            value,
+                            props,
+                            options
+                        );
 
-                    return acc;
-                }, {} as Record<string, ReturnType<typeof getValueFromProps>>);
+                        return acc;
+                    }, {} as Record<string, ReturnType<typeof getValueFromProps>>);
 
-                /**
-                 * If some mod is not defined in the props
-                 */
-                const isSomeModUndefined = Object.values(
-                    modValueFromProps
-                ).some((targetModValue) => targetModValue === undefined);
-
-                if (not && names.length > 1 && values.length === 1) {
-                    /*
-                     * For mods.not(['color', 'bg'], 'blue')
+                    /**
+                     * If some mod is not defined in the props
                      */
-                    const isSomeValueEqualSomePropsValue = values.some(
-                        (targetValue) => {
-                            return Object.values<ModifierValue>(
-                                modValueFromProps
-                            ).some((targetValueProps) =>
-                                isValueEqualValueProps(
-                                    targetValue,
-                                    targetValueProps
-                                )
-                            );
-                        }
-                    );
+                    const isSomeModUndefined = Object.values(
+                        modValueFromProps
+                    ).some((targetModValue) => targetModValue === undefined);
 
-                    if (isSomeValueEqualSomePropsValue) return css``;
-                } else if (values.length) {
+                    if (not && names.length > 1 && values.length === 1) {
+                        /*
+                         * For mods.not(['color', 'bg'], 'blue')
+                         */
+                        const isSomeValueEqualSomePropsValue = values.some(
+                            (targetValue) => {
+                                return Object.values<ModifierValue>(
+                                    modValueFromProps
+                                ).some((targetValueProps) =>
+                                    isValueEqualValueProps(
+                                        targetValue,
+                                        targetValueProps
+                                    )
+                                );
+                            }
+                        );
+
+                        if (isSomeValueEqualSomePropsValue) return css``;
+                    } else if (values.length) {
+                        /**
+                         * For mods('color', 'bg')
+                         * For mods('color', ['blue', 'black'])
+                         * For mods(['color', 'bg'], 'blue')
+                         * For mods(['color', 'bg'], ['blue', 'black'])
+                         * and
+                         * For mods.not('color', 'bg')
+                         * For mods.not('color', ['blue', 'black'])
+                         * For mods.not(['color', 'bg'], ['blue', 'black'])
+                         */
+                        const isSomeValueEqualEveryPropsValue = values.some(
+                            (targetValue) => {
+                                return Object.values<ModifierValue>(
+                                    modValueFromProps
+                                ).every((targetValueProps) =>
+                                    isValueEqualValueProps(
+                                        targetValue,
+                                        targetValueProps
+                                    )
+                                );
+                            }
+                        );
+
+                        if (
+                            not
+                                ? isSomeValueEqualEveryPropsValue
+                                : !isSomeValueEqualEveryPropsValue
+                        ) {
+                            return css``;
+                        }
+                    }
+
+                    /**
+                     * For mods.not(['color', 'bg'])
+                     */
+                    if (not && name.length > 1 && !values.length) {
+                        const isEveryModUndefined = Object.values(
+                            modValueFromProps
+                        ).every((targetModValue) => targetModValue === undefined);
+
+                        if (!isEveryModUndefined) return css``;
+                    }
+
                     /**
                      * For mods('color', 'bg')
                      * For mods('color', ['blue', 'black'])
                      * For mods(['color', 'bg'], 'blue')
                      * For mods(['color', 'bg'], ['blue', 'black'])
+                     * For mods('color')
+                     * For mods(['color', 'bg'])
                      * and
                      * For mods.not('color', 'bg')
                      * For mods.not('color', ['blue', 'black'])
+                     * For mods.not(['color', 'bg'], 'blue')
                      * For mods.not(['color', 'bg'], ['blue', 'black'])
                      */
-                    const isSomeValueEqualEveryPropsValue = values.some(
-                        (targetValue) => {
-                            return Object.values<ModifierValue>(
-                                modValueFromProps
-                            ).every((targetValueProps) =>
-                                isValueEqualValueProps(
-                                    targetValue,
-                                    targetValueProps
-                                )
-                            );
-                        }
-                    );
-
                     if (
-                        not
-                            ? isSomeValueEqualEveryPropsValue
-                            : !isSomeValueEqualEveryPropsValue
+                        values.length || !not
+                            ? isSomeModUndefined
+                            : !isSomeModUndefined
                     ) {
                         return css``;
                     }
-                }
 
-                /**
-                 * For mods.not(['color', 'bg'])
-                 */
-                if (not && name.length > 1 && !values.length) {
-                    const isEveryModUndefined = Object.values(
-                        modValueFromProps
-                    ).every((targetModValue) => targetModValue === undefined);
+                    const literals =
+                        typeof literalsAndFnLiterals === 'function'
+                            ? literalsAndFnLiterals(
+                                names.length > 1 && (not || values.length !== 1)
+                                    ? modValueFromProps
+                                    : modValueFromProps[names[0]],
+                                props
+                            )
+                            : literalsAndFnLiterals;
 
-                    if (!isEveryModUndefined) return css``;
-                }
-
-                /**
-                 * For mods('color', 'bg')
-                 * For mods('color', ['blue', 'black'])
-                 * For mods(['color', 'bg'], 'blue')
-                 * For mods(['color', 'bg'], ['blue', 'black'])
-                 * For mods('color')
-                 * For mods(['color', 'bg'])
-                 * and
-                 * For mods.not('color', 'bg')
-                 * For mods.not('color', ['blue', 'black'])
-                 * For mods.not(['color', 'bg'], 'blue')
-                 * For mods.not(['color', 'bg'], ['blue', 'black'])
-                 */
-                if (
-                    values.length || !not
-                        ? isSomeModUndefined
-                        : !isSomeModUndefined
-                ) {
-                    return css``;
-                }
-
-                const literals =
-                    typeof literalsAndFnLiterals === 'function'
-                        ? literalsAndFnLiterals(
-                              names.length > 1 && (not || values.length !== 1)
-                                  ? modValueFromProps
-                                  : modValueFromProps[names[0]],
-                              props
-                          )
-                        : literalsAndFnLiterals;
-
-                return returnStyles(literals, interpolations);
+                    return returnStyles(literals, interpolations);
+                };
             };
         };
-    };
 
 /**
  * Creating a modifier structure for an object mode

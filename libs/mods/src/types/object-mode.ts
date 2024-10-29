@@ -3,12 +3,11 @@ import {
     ModsConfigStructure,
     ModifierValue,
     FnLiterals,
-    Literals,
+    Literals, ThemedStyledProps,
 } from './shared';
 import {
+    DefaultTheme,
     Interpolation,
-    InterpolationFunction,
-    ThemedStyledProps,
 } from 'styled-components';
 
 export type ModValueFromProps<
@@ -21,16 +20,16 @@ export type ModValueFromProps<
 export type ObjModeFn<
     ModeName extends keyof any,
     ModValue extends ModifierValue | undefined
-> = <Props extends ComponentProps, Theme extends ComponentProps>(
+> = <Props extends ComponentProps, Theme extends DefaultTheme>(
     fn:
         | Literals<Props, Theme>
         | FnLiterals<
-              Extract<ModValueFromProps<ModeName, Props>, ModValue>,
-              Props,
-              Theme
-          >,
+        Extract<ModValueFromProps<ModeName, Props>, ModValue>,
+        Props,
+        Theme
+    >,
     ...interpolations: Array<Interpolation<ThemedStyledProps<Props, Theme>>>
-) => InterpolationFunction<Props>;
+) => Interpolation<ThemedStyledProps<Props, Theme>>;
 
 export type ObjModeChildren<
     Mods extends ModsConfigStructure,
@@ -38,17 +37,17 @@ export type ObjModeChildren<
     Not extends boolean
 > = Mods[ModName][number] extends boolean
     ? {
-          [Key in boolean as `${Key}`]: ObjModeFn<
-              ModName,
-              Not extends true ? Exclude<Mods[ModName][number], Key> : Key
-          >;
-      }
+        [Key in boolean as `${Key}`]: ObjModeFn<
+            ModName,
+            Not extends true ? Exclude<Mods[ModName][number], Key> : Key
+        >;
+    }
     : {
-          [Key in Exclude<Mods[ModName][number], boolean>]: ObjModeFn<
-              ModName,
-              Not extends true ? Exclude<Mods[ModName][number], Key> : Key
-          >;
-      };
+        [Key in Exclude<Mods[ModName][number], boolean>]: ObjModeFn<
+            ModName,
+            Not extends true ? Exclude<Mods[ModName][number], Key> : Key
+        >;
+    };
 
 /**
  * Type mode for mods.color.blue and etc

@@ -1,7 +1,7 @@
-import { ObjMode } from './object-mod';
+import { ObjMode } from './object-mode';
 import { FnMode } from './function-mode';
 import { ModsConfigStructure } from './shared';
-import { StyledProps } from 'styled-components';
+import { DefaultTheme } from 'styled-components';
 
 export * from './shared';
 
@@ -34,8 +34,8 @@ export type InitModsOptions = {
  */
 export type InitMods<Mods extends ModsConfigStructure> =
     | ModsStructure<Mods, false> & {
-          not: ModsStructure<Mods, true>;
-      };
+    not: ModsStructure<Mods, true>;
+};
 
 /**
  * The ModifiersConfig allows you representing the configuration structure of modifiers
@@ -61,6 +61,6 @@ export type Modifiers<
  * Internally, it prefixes all types passed to it with $.
  * to all the types passed to it.
  */
-export type StyledMods<T> = StyledProps<{
+export type StyledMods<T> = {
     [K in keyof T as `$${string & K}`]: T[K];
-}>;
+} & { theme: DefaultTheme };
