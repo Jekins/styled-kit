@@ -22,7 +22,7 @@
         "Theming"
     ],
     "dependencies": {
-        "styled-components": "^5.3.10",
+        "styled-components": "6.1.13",
         "tslib": "^2.3.0"
     }
 }
