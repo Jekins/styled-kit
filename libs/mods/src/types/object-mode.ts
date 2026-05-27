@@ -5,28 +5,24 @@ import {
     FnLiterals,
     Literals,
 } from './shared';
-import {
-    DefaultTheme,
-    Interpolation,
-} from 'styled-components';
+import { Interpolation } from 'styled-components';
 
 export type ModValueFromProps<
-    ModName extends keyof any,
+    ModName extends PropertyKey,
     Props extends ComponentProps
 > = ModName extends string
     ? Required<Props>[ModName] & Required<Props>[`$${ModName}`]
     : never;
 
 export type ObjModeFn<
-    ModeName extends keyof any,
+    ModeName extends PropertyKey,
     ModValue extends ModifierValue | undefined
-> = <Props extends ComponentProps, Theme extends DefaultTheme>(
+> = <Props extends ComponentProps>(
     fn:
-        | Literals<Props, Theme>
+        | Literals<Props>
         | FnLiterals<
         Extract<ModValueFromProps<ModeName, Props>, ModValue>,
-        Props,
-        Theme
+        Props
     >,
     ...interpolations: Array<Interpolation<NoInfer<Props>>>
 ) => Interpolation<Props>;

@@ -2,14 +2,12 @@ import {
     InitMods,
     ModsConfigStructure,
     ModifierValue,
-    Interpolations,
-    Literals,
     ComponentProps,
     ModNameFn,
     ModValueFn,
     InitModsOptions,
 } from './types';
-import { css, DefaultTheme, Interpolation } from 'styled-components';
+import { css, Interpolation } from 'styled-components';
 import { FnMode } from './types/function-mode';
 import { ObjModeFn } from './types/object-mode';
 
@@ -21,7 +19,7 @@ import { ObjModeFn } from './types/object-mode';
  * @param options
  */
 const getValueFromProps = <
-    ModName extends keyof any,
+    ModName extends PropertyKey,
     ModValue extends ModValueFn | undefined,
     Props extends ComponentProps
 >(
@@ -71,18 +69,15 @@ const isValueEqualValueProps = (
  * @param literals
  * @param interpolations
  */
-const returnStyles = <
-    L extends Interpolation<any>,
-    I extends Interpolations<any, DefaultTheme>
->(
-    literals?: L,
-    interpolations?: I
+const returnStyles = <Props extends ComponentProps>(
+    literals?: Interpolation<Props>,
+    interpolations?: Array<Interpolation<Props>>
 ) => {
     if (Array.isArray(interpolations) && interpolations.length) {
-        return css(literals as TemplateStringsArray, ...interpolations);
+        return css<Props>(literals as TemplateStringsArray, ...interpolations);
     }
 
-    return css`
+    return css<Props>`
         ${literals};
     `;
 };
@@ -94,7 +89,7 @@ const returnStyles = <
  */
 export const getObjMode =
     (not: boolean, options: InitModsOptions) =>
-        <ModName extends keyof any, ModValue extends ModifierValue | undefined>(
+        <ModName extends PropertyKey, ModValue extends ModifierValue | undefined>(
             name: ModName,
             value?: ModValue
         ): ObjModeFn<ModName, ModValue> => {

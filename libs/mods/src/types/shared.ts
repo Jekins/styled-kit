@@ -52,10 +52,7 @@ export type ModValueFn = ModifierValue | ReadonlyArray<ModifierValue>;
  * `RuleSet`-shaped arrays so the callable case is exclusively handled by
  * `FnLiterals`.
  */
-export type Literals<
-    Props extends ComponentProps,
-    Theme extends DefaultTheme
-> =
+export type Literals<Props extends ComponentProps> =
     | TemplateStringsArray
     | CSSObject
     | Interpolation<Props>[];
@@ -63,10 +60,7 @@ export type Literals<
 /**
  * Type of interpolations from styled components
  */
-export type Interpolations<
-    Props extends ComponentProps,
-    Theme extends DefaultTheme
-> = Interpolation<Props>;
+export type Interpolations<Props extends ComponentProps> = Interpolation<Props>;
 
 /**
  * Call Literals as a function. The `props` argument matches what
@@ -78,8 +72,7 @@ export type FnLiterals<
             | ModValueFn
         | { [ModName: string]: ModifierValue | undefined }
         | undefined,
-    Props extends ComponentProps,
-    Theme extends DefaultTheme
+    Props extends ComponentProps
 > = (
     value: ModValue,
     props: ExecutionContext & Props
