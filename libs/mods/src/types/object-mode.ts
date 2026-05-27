@@ -3,7 +3,7 @@ import {
     ModsConfigStructure,
     ModifierValue,
     FnLiterals,
-    Literals, ThemedStyledProps,
+    Literals,
 } from './shared';
 import {
     DefaultTheme,
@@ -28,8 +28,8 @@ export type ObjModeFn<
         Props,
         Theme
     >,
-    ...interpolations: Array<Interpolation<ThemedStyledProps<Props, Theme>>>
-) => Interpolation<ThemedStyledProps<Props, Theme>>;
+    ...interpolations: Array<Interpolation<NoInfer<Props>>>
+) => Interpolation<Props>;
 
 export type ObjModeChildren<
     Mods extends ModsConfigStructure,

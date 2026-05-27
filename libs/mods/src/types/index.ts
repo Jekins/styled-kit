@@ -1,7 +1,6 @@
 import { ObjMode } from './object-mode';
 import { FnMode } from './function-mode';
 import { ModsConfigStructure } from './shared';
-import { DefaultTheme } from 'styled-components';
 
 export * from './shared';
 
@@ -60,7 +59,11 @@ export type Modifiers<
  * but still have valid typing.
  * Internally, it prefixes all types passed to it with $.
  * to all the types passed to it.
+ *
+ * In styled-components v6 `theme` is provided to style functions via
+ * `ExecutionContext` — it must not appear in the component's public prop type,
+ * otherwise JSX consumers would be forced to pass it explicitly.
  */
 export type StyledMods<T> = {
     [K in keyof T as `$${string & K}`]: T[K];
-} & { theme: DefaultTheme };
+};
