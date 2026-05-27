@@ -3,11 +3,10 @@ export default {
     displayName: 'mods',
     preset: '../../jest.preset.js',
     transform: {
-        '^.+\\.[tj]s$': [
+        '^.+\\.[tj]sx?$': [
             'ts-jest',
             { tsconfig: '<rootDir>/tsconfig.spec.json' },
         ],
     },
-    moduleFileExtensions: ['ts', 'js', 'html'],
-    coverageDirectory: '../../coverage/packages/mods',
+    moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'html'],
 };
