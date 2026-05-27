@@ -9,5 +9,4 @@ export default {
         ],
     },
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'html'],
-    coverageDirectory: '../../coverage/packages/mods',
 };
