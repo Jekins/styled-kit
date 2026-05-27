@@ -185,6 +185,7 @@ export type { Mods } from './types';
 
 # Documentation
 
+-   [Requirements](#requirements)
 -   [Installation](#installation)
 -   [Setup](#setup)
     -   [Creating a modifiers configuration](#creating-a-modifiers-configuration)
@@ -208,6 +209,13 @@ export type { Mods } from './types';
         -   [WebStorm](#webstorm)
         -   [Atom](#atom)
         -   [Sublime text](#sublime-text)
+
+## Requirements
+
+| Package            | Version    | Notes                                                                                            |
+|--------------------|------------|--------------------------------------------------------------------------------------------------|
+| `styled-components`| `>= 6.0.0` | Declared as a peer dependency. v6 transient `$`-prefixed props are supported (see `StyledMods`). |
+| `typescript`       | `>= 5.4`   | The emitted `.d.ts` uses the built-in `NoInfer<T>` utility, introduced in TS 5.4.                |
 
 ## Installation
 
