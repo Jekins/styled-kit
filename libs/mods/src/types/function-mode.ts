@@ -6,10 +6,7 @@ import {
     ModNameFn,
     ModValueFn,
 } from './shared';
-import {
-    DefaultTheme,
-    Interpolation,
-} from 'styled-components';
+import { Interpolation } from 'styled-components';
 
 export type ModValueFromFn<ModValue extends ModValueFn | undefined> =
     ModValue extends ReadonlyArray<ModifierValue> ? ModValue[number] : ModValue;
@@ -71,15 +68,14 @@ export type FnModeReturn<
     ModName extends ModNameFn,
     ModValue extends ModValueFn | undefined,
     Not extends boolean
-> = <Props extends ComponentProps, Theme extends DefaultTheme>(
+> = <Props extends ComponentProps>(
     fn:
-        | Literals<Props, Theme>
+        | Literals<Props>
         | FnLiterals<
         Not extends true
             ? FnLiteralsNotModValue<ModName, ModValue, Props>
             : FnLiteralsModValue<ModName, ModValue, Props>,
-        Props,
-        Theme
+        Props
     >,
     ...interpolations: Array<Interpolation<NoInfer<Props>>>
 ) => Interpolation<Props>;
