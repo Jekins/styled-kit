@@ -148,8 +148,8 @@ export const getObjMode =
  * @param options
  */
 export const getFnMode =
-    (not: boolean, options: InitModsOptions): FnMode<false> =>
-        (name, value) => {
+    <Not extends boolean>(not: Not, options: InitModsOptions): FnMode<Not> =>
+        ((name, value) => {
             return (literalsAndFnLiterals, ...interpolations) => {
                 return (props) => {
                     const names: ModNameFn = Array.isArray(name) ? name : [name];
@@ -183,7 +183,7 @@ export const getFnMode =
                          */
                         const isSomeValueEqualSomePropsValue = values.some(
                             (targetValue) => {
-                                return Object.values<ModifierValue>(
+                                return Object.values<ModifierValue | undefined>(
                                     modValueFromProps
                                 ).some((targetValueProps) =>
                                     isValueEqualValueProps(
@@ -208,7 +208,7 @@ export const getFnMode =
                          */
                         const isSomeValueEqualEveryPropsValue = values.some(
                             (targetValue) => {
-                                return Object.values<ModifierValue>(
+                                return Object.values<ModifierValue | undefined>(
                                     modValueFromProps
                                 ).every((targetValueProps) =>
                                     isValueEqualValueProps(
@@ -231,7 +231,7 @@ export const getFnMode =
                     /**
                      * For mods.not(['color', 'bg'])
                      */
-                    if (not && name.length > 1 && !values.length) {
+                    if (not && names.length > 1 && !values.length) {
                         const isEveryModUndefined = Object.values(
                             modValueFromProps
                         ).every((targetModValue) => targetModValue === undefined);
@@ -273,7 +273,7 @@ export const getFnMode =
                     return returnStyles(literals, interpolations);
                 };
             };
-        };
+        }) as FnMode<Not>;
 
 /**
  * Creating a modifier structure for an object mode
