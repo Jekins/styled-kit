@@ -4,7 +4,7 @@ import {
     FnLiterals,
     Literals,
     ModNameFn,
-    ModValueFn, ThemedStyledProps,
+    ModValueFn,
 } from './shared';
 import {
     DefaultTheme,
@@ -81,8 +81,8 @@ export type FnModeReturn<
         Props,
         Theme
     >,
-    ...interpolations: Array<Interpolation<ThemedStyledProps<Props, Theme>>>
-) => Interpolation<ThemedStyledProps<Props, Theme>>;
+    ...interpolations: Array<Interpolation<NoInfer<Props>>>
+) => Interpolation<Props>;
 
 /**
  * Type mode for mods('color', 'blue') and etc
